@@ -1,19 +1,5 @@
 /*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2011 MigCore <http://wow-mig.ru/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2010-2011 Project StarGate
  */
 
 #include "ScriptPCH.h"
@@ -22,6 +8,11 @@
 enum eSpell
 {
     SPELL_ARCANE_ANNIHILATOR    = 79710
+};
+
+enum eAchievments
+{
+    ACHIEV_TIMED_START_EVENT                      = 17726,
 };
 
 class boss_toxitron : public CreatureScript
@@ -36,7 +27,7 @@ public:
 
     struct boss_toxitronAI : public BossAI
     {
-        boss_toxitronAI(Creature* pCreature) : BossAI(pCreature, DATA_OMNOTRON_DEFENSE_SYSTEM)
+        boss_toxitronAI(Creature* pCreature) : BossAI(pCreature, DATA_TOXITRON)
         {
 
         }
@@ -45,17 +36,26 @@ public:
 
         void Reset()
         {
+			summons.DespawnAll();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
+			if (instance)
+            {
+            instance->SetData(DATA_TOXITRON, NOT_STARTED);
+            instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
         }
+		}
+
+
 
         void EnterCombat(Unit* /*who*/) {}
 
         void JustDied(Unit* /*Killer*/) 
         {
     	_JustDied();
+		summons.DespawnAll();
         if (instance)
-        instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, DONE);
+        instance->SetData(DATA_TOXITRON, DONE);
 
 		}
         void UpdateAI(const uint32 Diff)

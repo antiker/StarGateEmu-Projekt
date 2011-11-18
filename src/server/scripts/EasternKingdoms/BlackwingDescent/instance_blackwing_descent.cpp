@@ -1,18 +1,5 @@
 /*
- * Copyright (C) 2010-2011 SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2010-2011 Project StarGate
  */
 
 #include "ScriptPCH.h"
@@ -34,6 +21,11 @@
    Toxitron
 */
 
+enum GameObjects
+{
+    ENTRY_DOOR                 = 201857
+};
+
 class instance_blackwing_descent : public InstanceMapScript
 {
 public:
@@ -49,7 +41,7 @@ public:
         instance_blackwing_descent_InstanceMapScript(InstanceMap* map) : InstanceScript(map) { }
 
         uint32 uiEncounter[ENCOUNTERS];
-
+		uint64 uiSkadiTheRuthlessDoor;
        	uint64 uiArcanotron;
         uint64 uiAtramedes;
         uint64 uiChimaeron;
@@ -61,8 +53,14 @@ public:
         uint64 uiOnyxia;
         uint64 uiToxitron;
         
+		std::string str_data;
+
         void Initialize()
         {
+			for (uint8 i = 0; i < ENCOUNTERS; ++i)
+            uiEncounter[i] = NOT_STARTED;
+
+			uiSkadiTheRuthlessDoor = 0;
             uiArcanotron = 0;
 			uiAtramedes = 0;
 			uiChimaeron = 0;
@@ -148,10 +146,24 @@ public:
                     return uiNefarian;
 				case DATA_ONYXIA_GUID:
                     return uiOnyxia;
-				case DATA_TOXITRON_GUID:
+				case DATA_TOXITRON:
                     return uiToxitron;
             }
-            return 0;
+        }
+
+		void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
+        {
+            switch(pGo->GetEntry())
+            {
+                case ENTRY_DOOR:
+                    uiToxitron = pGo->GetGUID();
+                    if (uiEncounter[2] == DONE) HandleGameObject(NULL, true, pGo);
+                    {
+                        HandleGameObject(NULL, false, pGo);
+                        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    }
+                    break;
+            }
         }
 
         void SetData(uint32 type, uint32 data)
@@ -185,9 +197,10 @@ public:
 				case DATA_ONYXIA_GUID:
 					uiEncounter[8] = data;
 					break;
-				case DATA_TOXITRON_GUID:
-					uiEncounter[9] = data;
-					break;
+				case DATA_TOXITRON:
+                    if (data == DONE)
+                        HandleGameObject(uiToxitron, true);
+                    uiEncounter[9] = data;
             }
 
          	if (data == DONE)
@@ -216,7 +229,7 @@ public:
                     return uiEncounter[7];
 				case DATA_ONYXIA_GUID:
                     return uiEncounter[8];
-				case DATA_TOXITRON_GUID:
+				case DATA_TOXITRON:
                     return uiEncounter[9];
             }
             return 0;
@@ -228,7 +241,7 @@ public:
 
             std::string str_data;
             std::ostringstream saveStream;
-            saveStream << "V P" << uiEncounter[0] << " " << uiEncounter[1]  << " " << uiEncounter[2];
+            saveStream << "V P" << uiEncounter[0] << " " << uiEncounter[1] << " " << uiEncounter[2] << " " << uiEncounter[3] << " " << uiEncounter[4] << " " << uiEncounter[5] << " " << uiEncounter[6] << " " << uiEncounter[7] << " " << uiEncounter[8] << " " << uiEncounter[9];
             str_data = saveStream.str();
 
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -256,6 +269,7 @@ public:
                 uiEncounter[0] = data0;
                 uiEncounter[1] = data1;
                 uiEncounter[2] = data2;
+				uiEncounter[9] = data2;
 
                 for(uint8 i=0; i < ENCOUNTERS; ++i)
                     if (uiEncounter[i] == IN_PROGRESS)
