@@ -38,7 +38,7 @@ enum Data
     DATA_ARCANOTRON_GUID         = 6, 
     DATA_ELECTRON_GUID           = 7, 
     DATA_MAGMATRON_GUID          = 8, 
-    DATA_TOXITRON_GUID           = 9, 
+    DATA_TOXITRON	             = 9, 
     DATA_ONYXIA_GUID             = 10, 
     DATA_BILE_O_TRON_800         = 11, 
     DATA_ONYXIA_EVENT	         = 12,
