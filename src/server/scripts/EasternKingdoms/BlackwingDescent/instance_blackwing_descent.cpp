@@ -23,8 +23,7 @@
 
 enum GameObjects
 {
-    ENTRY_DOOR                 = 201857,
-	ENTRY_GORK_PALEHOOF_SPHERE = 188593
+    ENTRY_DOOR                 = 201857
 };
 
 class instance_blackwing_descent : public InstanceMapScript
@@ -162,11 +161,6 @@ public:
                 case ENTRY_DOOR:
                     uiToxitron = pGo->GetGUID();
                     if (uiEncounter[9] == DONE) HandleGameObject(NULL, true, pGo);
-
-					break;
-                case ENTRY_GORK_PALEHOOF_SPHERE:
-                    uiToxitron = pGo->GetGUID();
-                    if (uiEncounter[9] == DONE)
 
                     {
                         HandleGameObject(NULL, false, pGo);
