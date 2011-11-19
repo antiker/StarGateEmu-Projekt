@@ -23,7 +23,7 @@ enum eSpell
 
 	SPELL_ChemischeBombe		= 80157,
 	SPELL_Giftprotokoll			= 91513,
-	SPELL_GiftgetränkterPanzer	= 79835
+	SPELL_GiftgetrÃ¤nkterPanzer	= 79835
 };
 
 enum eAchievments
@@ -50,13 +50,13 @@ public:
 
 		uint32 ChemischeBombeTimer;
 		uint32 GiftprotokollTimer;
-		uint32 GiftgetränkterPanzerTimer;
+		uint32 GiftgetrÃ¤nkterPanzerTimer;
 
         void Reset()
         {
 			ChemischeBombeTimer = 5*IN_MILLISECONDS;
 			GiftprotokollTimer = 5*IN_MILLISECONDS;
-			GiftgetränkterPanzerTimer = 5*IN_MILLISECONDS;
+			GiftgetrÃ¤nkterPanzerTimer = 5*IN_MILLISECONDS;
 			summons.DespawnAll();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
@@ -100,12 +100,12 @@ public:
                 GiftprotokollTimer = 70000;
 			} else GiftprotokollTimer -= Diff;
 
-			if (GiftgetränkterPanzerTimer <= Diff)
+			if (GiftgetrÃ¤nkterPanzerTimer <= Diff)
             {
 				if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-					me->CastSpell(target, SPELL_GiftgetränkterPanzer, true);
-                GiftgetränkterPanzerTimer = 80000;
-            } else GiftgetränkterPanzerTimer -= Diff;
+					me->CastSpell(target, SPELL_GiftgetrÃ¤nkterPanzer, true);
+                GiftgetrÃ¤nkterPanzerTimer = 80000;
+            } else GiftgetrÃ¤nkterPanzerTimer -= Diff;
 
 
 			if (me->HasUnitState(UNIT_STAT_CASTING))
@@ -134,7 +134,7 @@ public:
 
     struct boss_magmatronAI : public BossAI
     {
-        boss_magmatronAI(Creature* pCreature) : BossAI(pCreature, DATA_OMNOTRON_DEFENSE_SYSTEM)
+        boss_magmatronAI(Creature* pCreature) : BossAI(pCreature, DATA_TOXITRON)
         {
 
         }
@@ -161,7 +161,7 @@ public:
 	    {
 		_JustDied();
         if (instance)
-        instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, DONE);
+        instance->SetData(DATA_TOXITRON, DONE);
 		me->SummonCreature(42180, -324.8f, -398.1f, 213.8f, 1.4, TEMPSUMMON_CORPSE_DESPAWN, 0);
 		
 		}
@@ -217,7 +217,7 @@ public:
 
     struct boss_arcanotronAI : public BossAI
     {
-        boss_arcanotronAI(Creature* pCreature) : BossAI(pCreature, DATA_OMNOTRON_DEFENSE_SYSTEM)
+        boss_arcanotronAI(Creature* pCreature) : BossAI(pCreature, DATA_TOXITRON)
         {
 
         }
@@ -230,7 +230,7 @@ public:
 
         void Reset()
         {
-            instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, NOT_STARTED);
+            instance->SetData(DATA_TOXITRON, NOT_STARTED);
 
             ArcaneAnnihilatorTimer = 5*IN_MILLISECONDS;
 			KonvertierteEnergieTimer = 5*IN_MILLISECONDS;
@@ -245,19 +245,19 @@ public:
 
         void EnterCombat(Unit* /*who*/)
         {
-            instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, IN_PROGRESS);
+            instance->SetData(DATA_TOXITRON, IN_PROGRESS);
         }
 
         void JustReachedHome()
         {
-            instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, FAIL);
+            instance->SetData(DATA_TOXITRON, FAIL);
         }
 
         void JustDied(Unit* /*Killer*/)
         {
 		_JustDied();
         if (instance)
-	    instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, DONE);
+	    instance->SetData(DATA_TOXITRON, DONE);
 				
 		me->SummonCreature(42179, -340.6f, -386.4f, 213.9f, 1.0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 		
@@ -316,7 +316,7 @@ public:
 
     struct boss_electronAI : public BossAI
     {
-        boss_electronAI(Creature* pCreature) : BossAI(pCreature, DATA_OMNOTRON_DEFENSE_SYSTEM)
+        boss_electronAI(Creature* pCreature) : BossAI(pCreature, DATA_TOXITRON)
         {
 
         }
@@ -328,7 +328,7 @@ public:
 
         void Reset()
         {
-			instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, NOT_STARTED);
+			instance->SetData(DATA_TOXITRON, NOT_STARTED);
 
             BlitzableiterTimer = 5*IN_MILLISECONDS;
 			ElektrischeEntladungTimer = 5*IN_MILLISECONDS;
@@ -346,7 +346,7 @@ public:
         {
 		_JustDied();
         if (instance)
-	    instance->SetData(DATA_OMNOTRON_DEFENSE_SYSTEM, DONE);
+	    instance->SetData(DATA_TOXITRON, DONE);
 		me->SummonCreature(42178, -308.5f, -386.4f, 213.9f, 1.9, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
         }
