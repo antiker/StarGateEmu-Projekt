@@ -23,7 +23,8 @@
 
 enum GameObjects
 {
-    ENTRY_DOOR                 = 201857
+    ENTRY_DOOR                 = 201857,
+	ENTRY_GORK_PALEHOOF_SPHERE = 188593
 };
 
 class instance_blackwing_descent : public InstanceMapScript
@@ -52,6 +53,7 @@ public:
         uint64 uiNefarian;
         uint64 uiOnyxia;
         uint64 uiToxitron;
+		
         
 		std::string str_data;
 
@@ -71,6 +73,7 @@ public:
 			uiNefarian = 0;
 			uiOnyxia = 0;
 			uiToxitron = 0;
+			
             
         for(uint8 i=0; i < ENCOUNTERS; ++i)
                 uiEncounter[i] = NOT_STARTED;
@@ -148,6 +151,7 @@ public:
                     return uiOnyxia;
 				case DATA_TOXITRON:
                     return uiToxitron;
+					 
             }
         }
 
@@ -157,7 +161,13 @@ public:
             {
                 case ENTRY_DOOR:
                     uiToxitron = pGo->GetGUID();
-                    if (uiEncounter[2] == DONE) HandleGameObject(NULL, true, pGo);
+                    if (uiEncounter[9] == DONE) HandleGameObject(NULL, true, pGo);
+
+					break;
+                case ENTRY_GORK_PALEHOOF_SPHERE:
+                    uiToxitron = pGo->GetGUID();
+                    if (uiEncounter[9] == DONE)
+
                     {
                         HandleGameObject(NULL, false, pGo);
                         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
