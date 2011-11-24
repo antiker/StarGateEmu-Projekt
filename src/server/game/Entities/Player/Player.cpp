@@ -2251,7 +2251,9 @@ void Player::RegenerateAll()
     //    return;
 
     m_regenTimerCount += m_regenTimer;
-	m_holyPowerRegenTimerCount += m_regenTimer;
+	//m_holyPowerRegenTimerCount += m_regenTimer;
+	if (getClass() == CLASS_PALADIN)
+		m_holyPowerRegenTimerCount += m_regenTimer;
 
     Regenerate(POWER_ENERGY);
 

@@ -770,6 +770,16 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                     m_caster->RemoveAurasDueToSpell(87160);
                     m_caster->RemoveAurasDueToSpell(81292);
                 }
+			        // Mind Blast - Paralysis
+					        else if (m_spellInfo->Id == 8092)
+				 {
+			        // Paralysis (Rank 1)
+					        if (m_caster->HasAura(87192))
+					        m_caster->CastSpell(unitTarget, 87193, true);
+			        // Paralysis (Rank 2)
+			     		    else if (m_caster->HasAura(87195))
+						    m_caster->CastSpell(unitTarget, 87194, true);
+			     }
                 // Improved Mind Blast (Mind Blast in shadow form bonus)
                 else if (m_caster->GetShapeshiftForm() == FORM_SHADOW && (m_spellInfo->SpellFamilyFlags[0] & 0x00002000))
                 {
@@ -935,8 +945,9 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                 if (m_spellInfo->SpellFamilyFlags[1] & 0x00040000)
                 {
                     // Add main hand dps * effect[2] amount
-                    float average = (m_caster->GetFloatValue(UNIT_FIELD_MINDAMAGE) + m_caster->GetFloatValue(UNIT_FIELD_MAXDAMAGE)) / 2;
-                    int32 count = m_caster->CalculateSpellDamage(unitTarget, m_spellInfo, EFFECT_2);
+                    //float average = (m_caster->GetFloatValue(UNIT_FIELD_MINDAMAGE) + m_caster->GetFloatValue(UNIT_FIELD_MAXDAMAGE)) / 2;
+                    float average = (m_caster->GetFloatValue(UNIT_FIELD_MINDAMAGE) + m_caster->GetFloatValue(UNIT_FIELD_MAXDAMAGE)) / float(m_caster->GetAttackTime(BASE_ATTACK) / 1000.0f);
+					int32 count = m_caster->CalculateSpellDamage(unitTarget, m_spellInfo, EFFECT_2);
                     damage += count * int32(average * IN_MILLISECONDS) / m_caster->GetAttackTime(BASE_ATTACK);
                     break;
                 }
