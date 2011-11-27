@@ -1,4 +1,4 @@
-DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_gen_profession_research';
+DELETE FROM `spell_script_names` WHERE `AIName` = '', `ScriptName`='spell_gen_profession_research';
 DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_item_book_of_glyph_mastery';
 INSERT INTO `spell_script_names` 
 (`spell_id`,`ScriptName`) VALUES(60893, 'spell_gen_profession_research'),

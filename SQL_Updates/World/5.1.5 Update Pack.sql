@@ -1,1 +1,1 @@
-UPDATE `creature_template` SET `ScriptName`='boss_toxitron' WHERE `entry`=42180;
+UPDATE `creature_template` SET `AIName` = '', `ScriptName`='boss_toxitron' WHERE `entry`=42180;
