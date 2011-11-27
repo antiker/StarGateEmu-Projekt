@@ -23,7 +23,7 @@
  */
 
 #include "ScriptPCH.h"
-#include ".h"
+#include "bastion_of_twilight.h"
 
 enum Spells
 {
@@ -36,8 +36,6 @@ enum Spells
 	SPELL_Blendende_Zerstoerung       = 86408,
 	SPELL_Blackout                    = 86788,
     SPELL_Verschlingende_Flammen	  = 86844,
-    SPELL_Zwielichtverschiebung 	  = 93051,
-    SPELL_Verschobene_Realitaet       = 93055,
 	SPELL_Zwielichtmeteorit           = 86013,
 	SPELL_Tiefer_Atem                 = 86059,
 
@@ -53,10 +51,8 @@ enum Events
     EVENT_Blendende_Zerstoerung       = 6,
 	EVENT_Blackout			          = 7,
     EVENT_Verschlingende_Flammen	  = 8,
-    EVENT_Zwielichtverschiebung		  = 9,
-	EVENT_Verschobene_Realitaet		  = 10,
-    EVENT_Zwielichtmeteorit		      = 11,
-    EVENT_Tiefer_Atem                 = 12,
+    EVENT_Zwielichtmeteorit		      = 9,
+    EVENT_Tiefer_Atem                 = 10,
 };
 
 class boss_theralion_and_valiona : public CreatureScript
@@ -105,8 +101,8 @@ public:
 				   events.ScheduleEvent(EVENT_Zwielichtverschiebung, urand(20000, 23000));
 				   events.ScheduleEvent(EVENT_Verschobene_Realitaet, urand(20000, 23000));
 				   events.ScheduleEvent(EVENT_Zwielichtdruckwelle, urand(20000, 23000));
-				   events.ScheduleEvent(EVENT_Blendende_Zerstörung, urand(20000, 23000));
-				   events.ScheduleEvent(EVENT_Einhüllende_Magie, urand(20000, 23000));
+				   events.ScheduleEvent(EVENT_Blendende_Zerstoerung, urand(20000, 23000));
+				   events.ScheduleEvent(EVENT_Einhuellende_Magie, urand(20000, 23000));
                    events.ScheduleEvent(EVENT_Wunderbare_Flammen, urand(20000, 23000));
 				   events.ScheduleEvent(EVENT_Zwielichtverschiebung, urand(20000, 23000));
 				   events.ScheduleEvent(EVENT_Verschobene_Realitaet, urand(20000, 23000));
@@ -160,19 +156,6 @@ public:
 
                    if (me->HasUnitState(UNIT_STAT_CASTING))
            return;
-                
-                        if (HealthBelowPct(66) && fire == 0)
-                        {
-                                DoCastVictim(SPELL_name);
-                                fire = 1;
-                        }
-                        else
-                        if (HealthBelowPct(33) && fire == 1)
-                        {
-                                DoCastVictim(SPELL_name);
-                                fire = 2;
-                        }
-
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
@@ -181,70 +164,56 @@ public:
                         case EVENT_Einhuellende_Magie:
                             DoCast(me, SPELL_Einhuellende_Magie, true); 
 
-						case EVENT_Wunderbare_Flammen;
+						case EVENT_Wunderbare_Flammen:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Wunderbare_Flammen, true);
 							events.ScheduleEvent(EVENT_Wunderbare_Flammen, urand(20000, 23000));
 							break;
 
-						case EVENT_Zwielichtverschiebung;
+						case EVENT_Zwielichtverschiebung:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Zwielichtverschiebung, true);
 							events.ScheduleEvent(EVENT_Zwielichtverschiebung, urand(20000, 23000));
 							break;
 
-						case EVENT_Verschobene_Realitaet;
+						case EVENT_Verschobene_Realitaet:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Verschobene_Realitaet, true);
 							events.ScheduleEvent(EVENT_Verschobene_Realitaet, urand(20000, 23000));
 							break;
 
-						case EVENT_Zwielichtdruckwelle;
+						case EVENT_Zwielichtdruckwelle:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Zwielichtdruckwelle, true);
 							events.ScheduleEvent(EVENT_Zwielichtdruckwelle, urand(20000, 23000));
 							break;
 							
-						case EVENT_Blendende_Zerstoerung;
+						case EVENT_Blendende_Zerstoerung:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Blendende_Zerstoerung, true);
 							events.ScheduleEvent(EVENT_Blendende_Zerstoerung, urand(20000, 23000));
 							break;
 											
-						case EVENT_Verschlingende_Flammen;
+						case EVENT_Verschlingende_Flammen:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Verschlingende_Flammen, true);
 							events.ScheduleEvent(EVENT_Verschlingende_Flammen, urand(20000, 23000));
 							break;
 
-						case EVENT_Zwielichtverschiebung;
-							fire= 1;
-							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
-								DoCast(pTarget, SPELL_Zwielichtverschiebung, true);
-							events.ScheduleEvent(EVENT_Zwielichtverschiebung, urand(20000, 23000));
-							break;
-
-						case EVENT_Verschobene_Realitaet;
-							fire= 1;
-							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
-								DoCast(pTarget, SPELL_Verschobene_Realitaet, true);
-							events.ScheduleEvent(EVENT_Verschobene_Realitaet, urand(20000, 23000));
-							break;
-
-						case EVENT_Zwielichtmeteorit;
+						case EVENT_Zwielichtmeteorit:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Zwielichtmeteorit, true);
 							events.ScheduleEvent(EVENT_Zwielichtmeteorit, urand(20000, 23000));
 							break;
 							
-						case EVENT_Tiefer_Atem;
+						case EVENT_Tiefer_Atem:
 							fire= 1;
 							if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
 								DoCast(pTarget, SPELL_Tiefer_Atem, true);

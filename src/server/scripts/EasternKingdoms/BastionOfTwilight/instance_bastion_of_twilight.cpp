@@ -136,7 +136,7 @@ class instance_bastion_of_twilight : public InstanceMapScript
                 switch (type)
                 {
                     case DATA_HALFUS:                 return Encounter[0];
-                    case DATA_THERALION_ANA_VALIONA:  return Encounter[1];
+                    case DATA_THERALION_AND_VALIONA:  return Encounter[1];
                     case DATA_ASCENDANT_COUNCIL:      return Encounter[2];
                     case DATA_CHOGALL:                return Encounter[3];
                     case DATA_SINESTRA:               return Encounter[4];
