@@ -3864,6 +3864,10 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_STALKED;
             count++;
             break;
+		case 89024: // Pursuit of justice triggered
+            spellInfo->AttributesEx6 = 0;
+            count++;
+            break;
         case 49838: // Stop Time
         case 52916: // Honor Among Thieves
         case 50526: // Wandering Plague
@@ -4021,13 +4025,13 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;
-        case 52479: // Gift of the Harvester
-            spellInfo->MaxAffectedTargets = 1;
-            // a trap always has dst = src?
-            spellInfo->EffectImplicitTargetA[0] = TARGET_DST_CASTER;
-            spellInfo->EffectImplicitTargetA[1] = TARGET_DST_CASTER;
-            count++;
-            break;
+		case 52479: // Goft of the Harvester
+			spellInfo->MaxAffectedTargets = 1;
+			// a trap always has dst = src?
+			spellInfo->EffectImplicitTargetA[0] = TARGET_DST_CASTER;
+			spellInfo->EffectImplicitTargetA[1] = TARGET_DST_CASTER;
+			count++;
+			break;
         case 85113:  // Aftermath
         case 85114:
             spellInfo->Targets = TARGET_UNIT_TARGET_ENEMY;
