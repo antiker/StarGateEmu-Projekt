@@ -1,23 +1,5 @@
 /*
- * Copyright (C) 2005-2011 MaNGOS <http://www.getmangos.com/>
- *
- * Copyright (C) 2008-2011 Trinity <http://www.trinitycore.org/>
- *
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * Copyright (C) 2010-2011 Project StarGate
  */
 
 #include "gamePCH.h"
@@ -147,7 +129,7 @@ void Vehicle::Uninstall()
             if (passenger->HasUnitTypeMask(UNIT_MASK_ACCESSORY))
                 passenger->ToTempSummon()->UnSummon();
 
-    RemoveAllPassengers();
+    this->RemoveAllPassengers();
 
     if (GetBase()->GetTypeId() == TYPEID_UNIT)
         sScriptMgr->OnUninstall(this);
@@ -161,7 +143,7 @@ void Vehicle::Die()
             if (passenger->HasUnitTypeMask(UNIT_MASK_ACCESSORY))
                 passenger->setDeathState(JUST_DIED);
 
-    RemoveAllPassengers();
+    this->RemoveAllPassengers();
 
     if (GetBase()->GetTypeId() == TYPEID_UNIT)
         sScriptMgr->OnDie(this);
@@ -204,7 +186,10 @@ void Vehicle::RemoveAllPassengers()
             }
 
             // creature passengers mounted on player mounts should be despawned at dismount
-            if (GetBase()->GetTypeId() == TYPEID_PLAYER && passenger->ToCreature())
+            
+            if (GetBase()->IsOnVehicle(passenger) && 
+            GetBase()->GetTypeId() == TYPEID_PLAYER && passenger->ToCreature())
+            
                 passenger->ToCreature()->ForcedDespawn();
         }
 }
@@ -332,7 +317,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId, bool byAura)
     if (seat->second.seatInfo->m_flags && !(seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_UNK11))
         unit->AddUnitState(UNIT_STAT_ONVEHICLE);
 
-    unit->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
+    unit->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT | MOVEMENTFLAG_ROOT);
     VehicleSeatEntry const *veSeat = seat->second.seatInfo;
     unit->m_movementInfo.t_pos.m_positionX = veSeat->m_attachmentOffsetX;
     unit->m_movementInfo.t_pos.m_positionY = veSeat->m_attachmentOffsetY;
@@ -447,16 +432,17 @@ void Vehicle::RelocatePassengers(float x, float y, float z, float ang)
     for (SeatMap::const_iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
         if (Unit *passenger = itr->second.passenger)
         {
-            ASSERT(passenger->IsInWorld());
-            ASSERT(passenger->IsOnVehicle(GetBase()));
-            ASSERT(GetSeatForPassenger(passenger));
-
-            float px = x + passenger->m_movementInfo.t_pos.m_positionX;
-            float py = y + passenger->m_movementInfo.t_pos.m_positionY;
-            float pz = z + passenger->m_movementInfo.t_pos.m_positionZ;
-            float po = ang + passenger->m_movementInfo.t_pos.m_orientation;
-
-            passenger->SetPosition(px, py, pz, po);
+            if (!passenger)
+                return;
+      if ( this->GetBase()->IsOnVehicle(passenger))
+      {
+                float px = x + passenger->m_movementInfo.t_pos.m_positionX;
+                float py = y + passenger->m_movementInfo.t_pos.m_positionY;
+                float pz = z + passenger->m_movementInfo.t_pos.m_positionZ;
+                float po = ang + 
+                passenger->m_movementInfo.t_pos.m_orientation;
+                passenger->SetPosition(px, py, pz, po);
+            }
         }
 }
 
