@@ -58,10 +58,10 @@ public:
     {
         boss_halfus_wyrmbreakerAI(Creature* creature) : BossAI(creature, DATA_HALFUS)
         {
-            instance = creature->GetInstanceScript();
+            //instance = creature->GetInstanceScript();
         }
 
-        InstanceScript* instance;
+        //InstanceScript* instance;
         uint32 ShadowNovaTimer;
         uint32 BerserkTimer;
         uint32 FuriousRoarTimer;
