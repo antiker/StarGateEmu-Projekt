@@ -307,18 +307,18 @@ public:
         void ChangeHeal(SpellEffIndex /*effIndex*/)
         {
             Unit* caster = GetCaster();
-			Unit* target = GetHitUnit();
-            if (!target)
-                return;
+            //Unit* target = GetHitUnit();
+            // if (!target)
+               // return;
 
             if (GetCaster()->HasAura(SPELL_DIVINE_PURPOSE_PROC))
             {
                 totalheal = GetHitHeal() * 3;
 
 				// Selfless Healer
-             if (AuraEffect const* auraEff = caster->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_PALADIN, 3924, EFFECT_0))
-             if (target != caster)
-                 totalheal += totalheal + (totalheal * auraEff->GetAmount()) / 100;
+             //if (AuraEffect const* auraEff = caster->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_PALADIN, 3924, EFFECT_0))
+             //if (target != caster)
+                //totalheal += totalheal + (totalheal * auraEff->GetAmount()) / 100;
 
                 SetHitHeal(totalheal);
                 return;
@@ -326,31 +326,31 @@ public:
 
             switch (caster->GetPower(POWER_HOLY_POWER))
            {
-			   case 0: // 1 Holy Power
-                {
-                    totalheal = GetHitHeal();
-                    break;
-                }
+			   //case 0: // 1 Holy Power
+                //{
+                    //totalheal = GetHitHeal();
+                    //break;
+                //}
                 case 1: // 2 Holy Power
                 {
                     totalheal = GetHitHeal() * 2;
-                    //SetHitHeal(totalheal);
+                    SetHitHeal(totalheal);
                     break;
                 }
                 case 2: // 3 Holy Power
                 {
                     totalheal = GetHitHeal() * 3;
-                    //SetHitHeal(totalheal);
+                    SetHitHeal(totalheal);
                     break;
                 }
             }
 
 			// Selfless Healer
-            if (AuraEffect const* auraEff = caster->GetDummyAuraEffect(SPELLFAMILY_PALADIN, 3924, EFFECT_0))
-            if (target != caster)
-            totalheal += totalheal + (totalheal * auraEff->GetAmount()) / 100;
+            //if (AuraEffect const* auraEff = caster->GetDummyAuraEffect(SPELLFAMILY_PALADIN, 3924, EFFECT_0))
+            //if (target != caster)
+            //totalheal += totalheal + (totalheal * auraEff->GetAmount()) / 100;
 
-            SetHitHeal(totalheal);
+            //SetHitHeal(totalheal);
         }
 
         void Register()
@@ -365,7 +365,7 @@ public:
     }
 };
 
-class spell_pal_selfless_healer : public SpellScriptLoader
+/*class spell_pal_selfless_healer : public SpellScriptLoader
 {
     public:
         spell_pal_selfless_healer() : SpellScriptLoader("spell_pal_selfless_healer") { }
@@ -374,8 +374,8 @@ class spell_pal_selfless_healer : public SpellScriptLoader
         {
             PrepareAuraScript(spell_pal_selfless_healer_AuraScript);
 
-            void CalculateBonus(AuraEffect const* /*aurEff*/, int32& amount, bool& canBeRecalculated)
-            {
+            void CalculateBonus(AuraEffect const* /*aurEff*///, int32& amount, bool& canBeRecalculated) 
+            /*{
                 if (Unit* caster = GetCaster())
                 {
                     canBeRecalculated = true;
@@ -416,8 +416,8 @@ class spell_pal_selfless_healer : public SpellScriptLoader
         AuraScript* GetAuraScript() const
 		{
             return new spell_pal_selfless_healer_AuraScript();
-        }
-};
+        } */
+//}; 
 
 void AddSC_paladin_spell_scripts()
 {
@@ -427,5 +427,5 @@ void AddSC_paladin_spell_scripts()
     new spell_pal_judgements_of_the_bold();
 	new spell_pal_cleanse();
     new spell_pal_word_of_glory();
-	new spell_pal_selfless_healer();
+	//new spell_pal_selfless_healer();
 }
