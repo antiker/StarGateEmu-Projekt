@@ -591,12 +591,12 @@ void AddSC_boss_omnotron_defense_system();
 void AddSC_boss_atramedes();
 void AddSC_boss_maloriak();
 //void AddSC_boss_arcanotron();
-void AddSC_instance_bastion_of_twilight();	//Bastion Of Twilight
-void AddSC_boss_Chogall();
-void AddSC_boss_assembly_of_ascendents();
-void AddSC_boss_halfus_wyrmbreaker();
-void AddSC_boss_sinestra();
-void AddSC_boss_theralion_and_valiona();
+//void AddSC_instance_bastion_of_twilight();	//Bastion Of Twilight
+//void AddSC_boss_Chogall();
+//void AddSC_boss_assembly_of_ascendents();
+//void AddSC_boss_halfus_wyrmbreaker();
+//void AddSC_boss_sinestra();
+//void AddSC_boss_theralion_and_valiona();
 
 // battlegrounds
 
@@ -1243,12 +1243,12 @@ void AddNorthrendScripts()
 	AddSC_boss_atramedes();
 	AddSC_boss_maloriak();
 	//AddSC_boss_arcanotron();
-    AddSC_instance_bastion_of_twilight();	//Bastion Of Twilight
-    AddSC_boss_Chogall();
-	AddSC_boss_assembly_of_ascendents();
-    AddSC_boss_halfus_wyrmbreaker();
-    AddSC_boss_sinestra();
-    AddSC_boss_theralion_and_valiona();
+    //AddSC_instance_bastion_of_twilight();	//Bastion Of Twilight
+    //AddSC_boss_Chogall();
+	//AddSC_boss_assembly_of_ascendents();
+    //AddSC_boss_halfus_wyrmbreaker();
+    //AddSC_boss_sinestra();
+    //AddSC_boss_theralion_and_valiona();
 #endif
 }
 
