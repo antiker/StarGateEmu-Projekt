@@ -1,25 +1,25 @@
 #include "ScriptPCH.h"
-#include"ScriptedCreature.h"
-#include"grim_batol.h"
+#include "ScriptedCreature.h"
+//#include "grim_batol.h"
 
 #define SAY_AGGRO "Ihr kommt nicht durch die Abwehr!"
 #define SAY_AGGRO1 "Ihr seid noch nicht durch die Abwehr!"
-#define SAY_AGGRO2 "Throngus benutzt deine Leiche irgentwann auf einen anderen Körper..."
+#define SAY_AGGRO2 "Throngus benutzt deine Leiche irgentwann auf einen anderen Kï¿½rper..."
 #define SAY_AGGRO3 "Oh, dieser werde Schmerz!"
 #define SAY_DIED "Tod... Gute Wahl, nicht die beste wahl aber vieleicht besser als ein fehlschlag im leben!"
 
 enum Spells
 {
 SPELL_BOUCLIER = 90830, // Bouclier incendiaire
-SPELL_FLECHE = 45101, // Flèche enflammée
+SPELL_FLECHE = 45101, // Flï¿½che enflammï¿½e
 SPELL_PHALANGE = 74908, // Phalange individuelle
 SPELL_ARDENTE = 90764, // Flammes ardentes
 SPELL_ROSSER = 47480, // Rosser
 SPELL_LAME = 74981, // Double-lames
-SPELL_RUGIS = 74976, // Rugissement désorientant
+SPELL_RUGIS = 74976, // Rugissement dï¿½sorientant
 SPELL_GERBE = 90754, // Gerbe de lave
-SPELL_ENCOMBRE = 75007, // Encombré
-SPELL_HEURT = 75056, // Heurt d’empalement
+SPELL_ENCOMBRE = 75007, // Encombrï¿½
+SPELL_HEURT = 75056, // Heurt dï¿½empalement
 };
 
 enum Events
@@ -63,7 +63,7 @@ void Reset()
 events.ScheduleEvent(EVENT_BOUCLIER, 5 *IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_FLECHE, 8 *IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_PHALANGE, 12 *IN_MILLISECONDS);
-// Techniques à l’épée
+// Techniques ï¿½ lï¿½ï¿½pï¿½e
 events.ScheduleEvent(EVENT_ARDENTE, 12 *IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_ROSSER, 30 *IN_MILLISECONDS);
             events.ScheduleEvent(EVENT_LAME, 19 *IN_MILLISECONDS);
