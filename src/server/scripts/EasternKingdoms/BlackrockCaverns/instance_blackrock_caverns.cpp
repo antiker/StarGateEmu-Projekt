@@ -1,31 +1,19 @@
-/*
-* Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "ScriptPCH.h"
 #include "blackrock_caverns.h"
 
 #define ENCOUNTERS 5
 
+#define GO_PORTA1 402092
+#define GO_PORTA2 315000
+#define GO_PORTA3 315001
+#define GO_PORTA4 315002
+
 /*Boss Encounters
-  Rom'Ogg Bonecrusher
-  Corla, Herald of Twilight
-  Karsh Steelbender
-  Beauty
-  Ascendant Lord Obsidius
+Rom'Ogg Bonecrusher
+Corla, Herald of Twilight
+Karsh Steelbender
+Beauty
+Ascendant Lord Obsidius
 */
 
 class instance_blackrock_caverns : public InstanceMapScript
@@ -50,6 +38,11 @@ public:
         uint64 uiBeauty;
         uint64 uiAscendantLordObsidius;
 
+        uint64 porta1GUID;
+        uint64 porta2GUID;
+        uint64 porta3GUID;
+        uint64 porta4GUID;
+
         void Initialize()
         {
              uiRomoggBonecrusher = 0;
@@ -57,6 +50,11 @@ public:
              uiKarshSteelbender = 0;
              uiBeauty = 0;
              uiAscendantLordObsidius = 0;
+
+             porta1GUID = 0;
+             porta2GUID = 0;
+             porta3GUID = 0;
+             porta4GUID = 0;
 
              for(uint8 i = 0 ; i < ENCOUNTERS; ++i)
                  uiEncounter[i] = NOT_STARTED;
@@ -94,6 +92,41 @@ public:
             }
         }
 
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
+        {
+            switch(pGo->GetEntry())
+            {
+            case GO_PORTA1:
+                {
+                porta1GUID = pGo->GetGUID();
+                if (GetData(DATA_ROMOGG_BONECRUSHER_EVENT) == DONE)
+                    HandleGameObject(porta1GUID, true, pGo);
+                break;
+                }
+            case GO_PORTA2:
+                {
+                porta2GUID = pGo->GetGUID();
+                if (GetData(DATA_CORLA_EVENT) == DONE)
+                    HandleGameObject(porta2GUID, true, pGo);
+                break;
+                }
+            case GO_PORTA3:
+                {
+                porta3GUID = pGo->GetGUID();
+                if (GetData(DATA_KARSH_STEELBENDER_EVENT) == DONE)
+                    HandleGameObject(porta3GUID, true, pGo);
+                break;
+                }
+            case GO_PORTA4:
+                {
+                porta4GUID = pGo->GetGUID();
+                if (GetData(DATA_BEAUTY_EVENT) == DONE)
+                    HandleGameObject(porta4GUID, true, pGo);
+                break;
+                }
+            }
+        }
+
         uint64 getData64(uint32 identifier)
         {
             switch(identifier)
@@ -118,15 +151,23 @@ public:
             {
                 case DATA_ROMOGG_BONECRUSHER_EVENT:
                     uiEncounter[0] = data;
+                    if (data == DONE)
+                        HandleGameObject(porta1GUID, true);
                     break;
                 case DATA_CORLA_EVENT:
                     uiEncounter[1] = data;
+                    if (data == DONE)
+                        HandleGameObject(porta2GUID, true);
                     break;
                 case DATA_KARSH_STEELBENDER_EVENT:
                     uiEncounter[2] = data;
+                    if (data == DONE)
+                        HandleGameObject(porta3GUID, true);
                     break;
                 case DATA_BEAUTY_EVENT:
                     uiEncounter[3] = data;
+                    if (data == DONE)
+                        HandleGameObject(porta4GUID, true);
                     break;
                 case DATA_ASCENDANT_LORD_OBSIDIUS_EVENT:
                     uiEncounter[4] = data;
@@ -160,7 +201,7 @@ public:
 
             std::string str_data;
             std::ostringstream saveStream;
-            saveStream << "B C" << uiEncounter[0] << " " << uiEncounter[1]  << " " << uiEncounter[2]  << " " << uiEncounter[3] << " " << uiEncounter[4];
+            saveStream << "B C" << " " << uiEncounter[0] << " " << uiEncounter[1] << " " << uiEncounter[2] << " " << uiEncounter[3] << " " << uiEncounter[4];
             str_data = saveStream.str();
 
             OUT_SAVE_INST_DATA_COMPLETE;

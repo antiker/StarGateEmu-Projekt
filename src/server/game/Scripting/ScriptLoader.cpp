@@ -590,6 +590,12 @@ void AddSC_boss_erunak_stonespeaker();
 void AddSC_boss_lady_nazjar();
 //void AddSC_neptulon();
 void AddSC_instance_blackrock_caverns();        //Blackrock Caverns
+void AddSC_boss_corla();
+void AddSC_boss_romogg_bonecrusher();
+void AddSC_boss_karsh();
+void AddSC_boss_bella();
+void AddSC_boss_lord_obsidius();
+void AddSC_bc_teleport();
 void AddSC_instance_blackwing_descent();    //Blackwing Descent
 void AddSC_boss_magmaw();
 void AddSC_boss_onyxia2();
@@ -1250,6 +1256,12 @@ void AddNorthrendScripts()
 	AddSC_boss_commander_ulthok();
 	AddSC_boss_lady_nazjar();
     AddSC_instance_blackrock_caverns();        //Blackrock Caverns
+	AddSC_boss_corla();
+    AddSC_boss_romogg_bonecrusher();
+    AddSC_boss_karsh();
+    AddSC_boss_bella();
+    AddSC_bc_teleport();
+    AddSC_boss_lord_obsidius();
     AddSC_instance_blackwing_descent();      //Blackwing Descent
     AddSC_boss_magmaw();
     AddSC_boss_onyxia2();

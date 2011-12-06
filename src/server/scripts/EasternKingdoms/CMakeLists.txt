@@ -222,11 +222,12 @@ EasternKingdoms/BastionOfTwilight/boss_chogall.cpp
   EasternKingdoms/BaradinHold/boss_argaloth.cpp
   EasternKingdoms/BaradinHold/boss_occuthar.cpp
   EasternKingdoms/BlackrockCaverns/blackrock_caverns.h
-  EasternKingdoms/BlackrockCaverns/boss_ascendant_lord_obsidius.cpp
-  EasternKingdoms/BlackrockCaverns/boss_beauty.cpp
-  EasternKingdoms/BlackrockCaverns/boss_corla_herald_of_twilight.cpp
-  EasternKingdoms/BlackrockCaverns/boss_karsh_steelbender.cpp
-  EasternKingdoms/BlackrockCaverns/boss_romogg_bonecrusher.cpp
+  EasternKingdoms/BlackrockCaverns/blackrock_caverns_teleport.cpp
+  EasternKingdoms/BlackrockCaverns/boss_bella.cpp
+  EasternKingdoms/BlackrockCaverns/boss_corla.cpp
+  EasternKingdoms/BlackrockCaverns/boss_karsh.cpp
+  EasternKingdoms/BlackrockCaverns/boss_lord_obsidius.cpp
+  EasternKingdoms/BlackrockCaverns/boss_rom_ogg.cpp
   EasternKingdoms/BlackrockCaverns/instance_blackrock_caverns.cpp
   EasternKingdoms/GrimBatol/grim_batol.h
   EasternKingdoms/GrimBatol/boss_drahga.cpp
