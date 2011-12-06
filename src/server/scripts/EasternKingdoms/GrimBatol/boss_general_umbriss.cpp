@@ -3,7 +3,7 @@
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
 #include "SpellAuraEffects.h"
-#include"grim_batol.h"
+//#include "grim_batol.h"
 
 
 enum Archivement
