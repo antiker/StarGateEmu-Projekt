@@ -1,19 +1,4 @@
-/*
-* Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+
 
 #ifndef DEF_GRIM_BATOL_H
 #define DEF_GRIM_BATOL_H
@@ -67,6 +52,9 @@ enum CreatureIds
     NPC_TWILIGHT_STORM_BREAKER  = 39962,
     NPC_TWILIGHT_THUNDER_CALLER = 40270,
     NPC_TWILIGHT_WYRM_CALLER    = 39873,
+	//MOB_FACELESS = 40600,
+
+
 
     //Various NPCs
 
@@ -79,6 +67,49 @@ enum CreatureIds
 enum GameObjectIds
 {
     GO_DWARVEN_BONE_PILE        = 207411,
+};
+
+
+enum Spells
+{
+    //boss_erudax
+    SPELL_PLAGUE = 82622, //seuche der zeitalter
+    SPELL_ORKAN = 75664, //schattenorkan
+    SPELL_SPAWN = 75704, //gesichtslosen beschwören
+    //faceless curruptor
+    SPELL_CORRUPTION = 75520,
+    SPELL_UMBRALE = 75763,
+    SPELL_SIPHON = 75755,
+};
+
+enum Yells
+{
+    SAY_AGGRO = -1800200,
+    SAY_DEATH = -1800201,
+    SAY_SUMMON = -1800201,
+};
+
+enum Events
+{
+    //boss_erudax
+    EVENT_PLAGUE = 1,
+    EVENT_ORKAN = 2,
+    EVENT_SUMMON = 3,
+    //faceless curruptor
+    EVENT_CORRUPTION = 4,
+    EVENT_UMBRALE = 5,
+    EVENT_SIPHON = 6,
+};
+
+enum SummonIds
+{
+    MOB_FACELESS = 40600,
+};
+
+const Position aSpawnLocations[2] =
+{
+    {-0.0f, -0.0f, 0.0f, 0.0f},
+    {-0.0f, -0.0f, 0.0f, 0.0f},
 };
 
 #endif

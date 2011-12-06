@@ -580,6 +580,10 @@ void AddSC_boss_high_prophet_barim();
 void AddSC_instance_the_vortex_pinnacle();      //The Vortex Pinnacle
 void AddSC_boss_altairus();
 void AddSC_instance_grim_batol();               //Grim Batol
+void AddSC_boss_general_umbriss();
+void AddSC_boss_drahga();
+void AddSC_boss_erudax();
+void AddSC_boss_throngus();
 void AddSC_instance_throne_of_the_tides();      //Throne of the Tides
 void AddSC_instance_blackrock_caverns();        //Blackrock Caverns
 void AddSC_instance_blackwing_descent();    //Blackwing Descent
@@ -1232,6 +1236,10 @@ void AddNorthrendScripts()
     AddSC_instance_the_vortex_pinnacle();      //The Vortex Pinnacle
     AddSC_boss_altairus();
     AddSC_instance_grim_batol();               //Grim Batol
+	AddSC_boss_general_umbriss();
+	AddSC_boss_drahga();
+	AddSC_boss_erudax();
+	AddSC_boss_throngus();
     AddSC_instance_throne_of_the_tides();      //Throne of the Tides
     AddSC_instance_blackrock_caverns();        //Blackrock Caverns
     AddSC_instance_blackwing_descent();      //Blackwing Descent

@@ -229,9 +229,9 @@ EasternKingdoms/BastionOfTwilight/boss_chogall.cpp
   EasternKingdoms/BlackrockCaverns/boss_romogg_bonecrusher.cpp
   EasternKingdoms/BlackrockCaverns/instance_blackrock_caverns.cpp
   EasternKingdoms/GrimBatol/grim_batol.h
-  EasternKingdoms/GrimBatol/boss_drahga_shadowburner.cpp
+  EasternKingdoms/GrimBatol/boss_drahga.cpp
   EasternKingdoms/GrimBatol/boss_erudax.cpp
-  EasternKingdoms/GrimBatol/boss_forgemaster_throngus.cpp
+  EasternKingdoms/GrimBatol/boss_throngus.cpp
   EasternKingdoms/GrimBatol/boss_general_umbriss.cpp
   EasternKingdoms/GrimBatol/instance_grim_batol.cpp 
   EasternKingdoms/ThroneOfTheTides/throne_of_the_tides.h

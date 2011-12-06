@@ -1,57 +1,166 @@
-/*
-* Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "ScriptPCH.h"
-#include "grim_batol.h"
+#include"ScriptedCreature.h"
+#include"grim_batol.h"
 
-class boss_erudax : public CreatureScript
+#define spell_ombre 82622
+#define spell_trombe 75664
+#define spell_spawn 75704
+
+#define SAY_AGGRO "Kommt!!!  Betritt... das Chaos !"
+#define SAY_DIED "Ywaq maq oou; ywaq maq ssaggh. Ywaq ma shg'fhn."
+
+class boss_erudax: public CreatureScript
 {
 public:
-    boss_erudax() : CreatureScript("boss_erudax") { }
+ boss_erudax() : CreatureScript("boss_erudax") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+ struct boss_erudaxAI : public ScriptedAI
     {
-        return new boss_erudaxAI (creature);
-    }
+        boss_erudaxAI(Creature *c) : ScriptedAI(c) {}
 
-    struct boss_erudaxAI : public ScriptedAI
-    {
-        boss_erudaxAI(Creature* creature) : ScriptedAI(creature)
+uint32 ombre;
+uint32 trombe;
+uint32 spawn;
+
+        void Reset()
         {
-            instance = creature->GetInstanceScript();
+           ombre = 10000;
+           trombe = 15000;
+spawn = 30000;
         }
 
-        InstanceScript* instance;
-
-        void Reset() {}
-
-        void EnterCombat(Unit* /*who*/) {}
-
-        void UpdateAI(const uint32 Diff)
+        void EnterCombat(Unit* /*who*/)
         {
-            if (!UpdateVictim())
-                return;
+me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+                if (!UpdateVictim())
+                    return;
+           
+            if (ombre <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_ombre);
+                ombre = 10000;
+            }
+            else
+                ombre -= diff;
+
+            if (trombe <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_trombe);
+                trombe = 15000;
+            }
+            else
+                trombe -= diff;
+
+            if (spawn <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_spawn);
+                spawn = 30000;
+            }
+            else
+                spawn -= diff;
+
+if (!UpdateVictim())
+                    return;
 
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_erudaxAI (pCreature);
+    }
+
+};
+
+/*
+Mob Erudax id = 40600
+*/
+
+#define spell_corruption 75520
+#define spell_umbrale 75763
+#define spell_siphon 75755
+
+class mob_erudax: public CreatureScript
+{
+public:
+ mob_erudax() : CreatureScript("mob_erudax") { }
+
+ struct mob_erudaxAI : public ScriptedAI
+    {
+        mob_erudaxAI(Creature *c) : ScriptedAI(c) {}
+
+uint32 corruption;
+uint32 umbrale;
+uint32 siphon;
+
+        void Reset()
+        {
+           corruption = 10000;
+           umbrale = 15000;
+siphon = 20000;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+                if (!UpdateVictim())
+                    return;
+           
+            if (corruption <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_corruption);
+                corruption = 10000;
+            }
+            else
+                corruption -= diff;
+
+            if (umbrale <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_umbrale);
+                umbrale = 15000;
+            }
+            else
+                umbrale -= diff;
+
+            if (siphon <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_siphon);
+                siphon = 20000;
+            }
+            else
+                siphon -= diff;
+
+if (!UpdateVictim())
+                    return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_erudaxAI (pCreature);
+    }
+
 };
 
 void AddSC_boss_erudax()
 {
     new boss_erudax();
+new mob_erudax();
 }
