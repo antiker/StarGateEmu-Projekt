@@ -120,7 +120,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         result = CharacterDatabase.PQuery("SELECT id, entry, owner, modelid, level, exp, Reactstate, slot, name, renamed, curhealth, curmana, curhappiness, abdata, savetime, resettalents_cost, resettalents_time, CreatedBySpell, PetType "
             "FROM character_pet WHERE owner = '%u' AND ((slot >= '%u' AND slot <= '%u') OR slot > '%u')",
             ownerid, PET_SLOT_HUNTER_FIRST, PET_SLOT_HUNTER_LAST, PET_SLOT_STABLE_LAST);
-    if (m_owner->getClass() == CLASS_MAGE) // Pet de mago solo en escarcha
+    if (m_owner->getClass() == CLASS_MAGE) 
     {
        QueryResult result2;
        result2 = CharacterDatabase.PQuery("SELECT disabled FROM character_spell WHERE guid = '%u' AND spell = 31687",
