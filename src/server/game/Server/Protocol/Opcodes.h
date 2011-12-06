@@ -215,7 +215,7 @@ enum Opcodes
     MSG_MOVE_SET_ALL_SPEED_CHEAT                     = 0x10025, //
     MSG_MOVE_SET_TURN_RATE_CHEAT                     = 0x10026, //
     MSG_MOVE_SET_TURN_RATE                           = 0x0A3A8, // 4.0.6a 13623
-    MSG_MOVE_TOGGLE_COLLISION_CHEAT                  = 0x00028, //
+    MSG_MOVE_TOGGLE_COLLISION_CHEAT                  = 0x07688, // 4.0.6a 13623
     MSG_MOVE_SET_FACING                              = 0x0ABC4, // 4.0.6a 13623
     MSG_MOVE_SET_PITCH                               = 0x0EBA0, // 4.0.6a 13623
     MSG_MOVE_WORLDPORT_ACK                           = 0x02FC0, // 4.0.6a 13623
@@ -226,7 +226,7 @@ enum Opcodes
     CMSG_MOVE_SET_RAW_POSITION                       = 0x0F0C8, // 4.0.6a 13623
     SMSG_FORCE_RUN_SPEED_CHANGE                      = 0x0F1CC, // 4.0.6a 13623
     CMSG_FORCE_RUN_SPEED_CHANGE_ACK                  = 0x026C8, // 4.0.6a 13623
-    SMSG_FORCE_RUN_BACK_SPEED_CHANGE                 = 0x1002E, //
+    SMSG_FORCE_RUN_BACK_SPEED_CHANGE                 = 0x068E8, // 4.0.6a 13623
     CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK             = 0x078E4, // 4.0.6a 13623
     SMSG_FORCE_SWIM_SPEED_CHANGE                     = 0x0F5A0, // 4.0.6a 13623
     CMSG_FORCE_SWIM_SPEED_CHANGE_ACK                 = 0x0B1A0, // 4.0.6a 13623
@@ -660,9 +660,9 @@ enum Opcodes
     CMSG_LOOT_ROLL                                   = 0x0BDA8, // 4.0.6a 13623
     SMSG_LOOT_START_ROLL                             = 0x0EB84, // 4.0.6a 13623
     SMSG_LOOT_ROLL                                   = 0x066A8, // 4.0.6a 13623
-    CMSG_LOOT_MASTER_GIVE                            = 0x100DA, //
+    CMSG_LOOT_MASTER_GIVE                            = 0x03BA4, // 4.0.6a 13623
     SMSG_LOOT_MASTER_LIST                            = 0x0ECC4, // 4.0.6a 13623
-    SMSG_SET_FORCED_REACTIONS                        = 0x100DB, //
+    SMSG_SET_FORCED_REACTIONS                        = 0x0FFA0, // 4.0.6a 13623
     SMSG_SPELL_FAILED_OTHER                          = 0x0E7A4, // 4.0.6a 13623
     SMSG_GAMEOBJECT_RESET_STATE                      = 0x022E0, // 4.0.6a 13623
     CMSG_REPAIR_ITEM                                 = 0x039E4, // 4.0.6a 13623
@@ -698,7 +698,7 @@ enum Opcodes
     CMSG_CHAR_RENAME                                 = 0x027C4, // 4.0.6a 13623
     SMSG_CHAR_RENAME                                 = 0x0E0EC, // 4.0.6a 13623
     CMSG_MOVE_SPLINE_DONE                            = 0x069E8, // 4.0.6a 13623
-    CMSG_MOVE_FALL_RESET                             = 0x100E6, //
+    CMSG_MOVE_FALL_RESET                             = 0x0E680, // 4.0.6a 13623
     SMSG_INSTANCE_SAVE_CREATED                       = 0x0BBC4, // 4.0.6a 13623
     SMSG_RAID_INSTANCE_INFO                          = 0x100E7, // 4.0.6a 13623
     CMSG_REQUEST_RAID_INFO                           = 0x03DE4, // 4.0.6a 13623
@@ -736,7 +736,7 @@ enum Opcodes
     SMSG_GROUP_JOINED_BATTLEGROUND                   = 0x00D1E, // 4.0.6a 13623
     CMSG_BATTLEGROUND_PLAYER_POSITIONS               = 0x00293, // 4.0.6a 13623
     SMSG_BATTLEGROUND_PLAYER_POSITIONS               = 0x0045C, // 4.0.6a 13623
-    CMSG_PET_STOP_ATTACK                             = 0x10100, //
+    CMSG_PET_STOP_ATTACK                             = 0x03A88, // 4.0.6a 13623
     SMSG_BINDER_CONFIRM                              = 0x033C4, // 4.0.6a 13623
     SMSG_BATTLEGROUND_PLAYER_JOINED                  = 0x0494C, // 4.0.6a 13623
     SMSG_BATTLEGROUND_PLAYER_LEFT                    = 0x00D1C, // 4.0.6a 13623
@@ -817,7 +817,7 @@ enum Opcodes
     SMSG_CHARACTER_PROFILE                           = 0x1012D, //
     SMSG_CHARACTER_PROFILE_REALM_CONNECTED           = 0x1012E, //
     SMSG_DEFENSE_MESSAGE                             = 0x065EC, // 4.0.6a 13623
-    SMSG_INSTANCE_DIFFICULTY                         = 0x0A55E, //
+    SMSG_INSTANCE_DIFFICULTY                         = 0x0FFE4, // 4.0.6a 13623
     MSG_GM_RESETINSTANCELIMIT                        = 0x1012F, //
     SMSG_MOTD                                        = 0x077C0, // 4.0.6a 13623
     SMSG_MOVE_SET_FLIGHT                             = 0x0C57F, //
