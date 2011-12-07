@@ -3352,6 +3352,24 @@ void Spell::cast(bool skipCheck)
               m_preCastSpell = 68391;
              break;
         }
+		case SPELLFAMILY_WARRIOR:
+        {
+             // Improved Hamstring
+             if (m_targets.getUnitTarget() && m_targets.getUnitTarget()->HasAura(1715) && m_caster && m_caster->GetTypeId() == TYPEID_PLAYER)
+             {
+                 if (m_caster->ToPlayer()->HasSpellCooldown(23694))
+                     break;
+
+                 AuraEffect * aur;
+                 aur = m_caster->GetAuraEffect(12289, 0);
+                 if (!aur)
+                     aur = m_caster->GetAuraEffect(12668, 0);
+
+                 m_caster->CastSpell(unitTarget, 23694, true);
+                 m_caster->ToPlayer()->AddSpellCooldown(23694, 0, time(NULL)+aur->GetAmount());
+             }
+             break;
+        }
     }
 
     // traded items have trade slot instead of guid in m_itemTargetGUID
@@ -4137,6 +4155,8 @@ void Spell::SendSpellGo()
         {
             uint8 mask = (1 << i);
             float baseCd = float(player->GetRuneBaseCooldown(i));
+			if (baseCd == 0)
+				baseCd=0.01f;
             data << uint8((baseCd - float(player->GetRuneCooldown(i))) / baseCd * 255); // rune cooldown passed
         }
     }
@@ -5850,7 +5870,8 @@ SpellCastResult Spell::CheckCast(bool strict)
             }
             case SPELL_AURA_MOUNTED:
             {
-                if (m_caster->IsInWater())
+                //if (m_caster->IsInWater())
+				if (m_caster->IsInWater()   && m_spellInfo->Id != 75207) //Test Fix
                     return SPELL_FAILED_ONLY_ABOVEWATER;
 
                 // Ignore map check if spell have AreaId. AreaId already checked and this prevent special mount spells
@@ -7361,6 +7382,10 @@ SpellCastResult Spell::CanOpenLock(uint32 effIndex, uint32 lockId, SkillType& sk
                         0 : m_caster->ToPlayer()->GetSkillValue(skillId);
 
                     skillValue += spellSkillBonus;
+
+					//Fix ganzua
+                    if (skillId == 633)
+                       skillValue+=100;
 
                     if (skillValue < reqSkillValue)
                         return SPELL_FAILED_LOW_CASTLEVEL;

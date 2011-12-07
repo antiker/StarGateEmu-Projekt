@@ -232,7 +232,8 @@ public:
                 {
                     canBeRecalculated = true;
                     int32 basemana = caster->ToPlayer()->GetCreateMana();
-                    amount = (3 * basemana) / 100; // 3% of base mana
+                    //amount = (3 * basemana) / 100; // 3% of base mana
+					amount = (basemana) * 0.025; // 2.5% of base mana Test Fix
                 }
     	 }
 

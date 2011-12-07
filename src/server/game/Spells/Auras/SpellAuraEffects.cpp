@@ -1489,10 +1489,15 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit * caster) const
                 // Explosive Shot
                 if (GetSpellProto()->Id == 53301)
                     damage = int32(damage + (0.232f * GetBase()->GetCaster()->GetTotalAttackPowerValue(RANGED_ATTACK)));
-
-                // Serpent String
+				
+				// Consecrate	
+				if (GetSpellProto()->Id == 36946)
+					damage = int32(8 * (0.03f * caster->GetTotalAttackPowerValue(BASE_ATTACK)));
+                
+				// Serpent String
                 if (GetSpellProto()->Id == 1978)
-                    damage = int32(GetBase()->GetCaster()->GetTotalAttackPowerValue(RANGED_ATTACK) * 0.4f + (damage * 15 / 3));
+                    //damage = int32(GetBase()->GetCaster()->GetTotalAttackPowerValue(RANGED_ATTACK) * 0.4f + (damage * 15 / 3));
+					damage = int32(GetBase()->GetCaster()->GetTotalAttackPowerValue(RANGED_ATTACK) * 0.8f); //Test Fix
 
                 // There is a Chance to make a Soul Shard when Drain soul does damage
                 if (GetSpellProto()->SpellFamilyName == SPELLFAMILY_WARLOCK && (GetSpellProto()->SpellFamilyFlags[0] & 0x00004000))

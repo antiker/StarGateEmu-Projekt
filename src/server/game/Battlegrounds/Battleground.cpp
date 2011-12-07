@@ -308,7 +308,9 @@ inline void Battleground::_ProcessRessurect(uint32 diff)
                             // Spirit Heal, effect 117
                             sh->CastSpell(sh, SPELL_SPIRIT_HEAL, true);
                     }
-
+					plr->CastSpell(plr, 67261, true);
+					plr->CastSpell(plr, 2479, true);
+					plr->CastSpell(plr, 34518, true);
                     // Resurrection visual
                     plr->CastSpell(plr, SPELL_RESURRECTION_VISUAL, true);
                     m_ResurrectQueue.push_back(*itr2);
@@ -1073,7 +1075,9 @@ void Battleground::AddPlayer(Player* plr)
     uint32 queueSlot = plr->GetBattlegroundQueueIndex(bgQueueTypeId);
     sBattlegroundMgr->BuildBattlegroundStatusPacket(&status, this, queueSlot, STATUS_IN_PROGRESS, 0, GetStartTime(), GetArenaType(), isArena() ? 0 : 1);
     plr->GetSession()->SendPacket(&status);
-
+	plr->AddSpellCooldown(69070,0,time(NULL) + 120);
+	plr->AddSpellCooldown(36554,0,time(NULL) + 120);
+	plr->AddSpellCooldown(6544,0,time(NULL) + 120);
     plr->RemoveAurasByType(SPELL_AURA_MOUNTED);
     if (plr->getClass() == CLASS_DRUID)
         plr->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);

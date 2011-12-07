@@ -507,12 +507,14 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
             {
                // Bloodthirst
                if (m_spellInfo->SpellFamilyFlags[1] & 0x400)
-                   damage = uint32(damage * (m_caster->GetTotalAttackPowerValue(BASE_ATTACK)) / 100);
-               // Victory Rush
+                   //damage = uint32(damage * (m_caster->GetTotalAttackPowerValue(BASE_ATTACK)) / 100);
+					damage = uint32(m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.65); //Test Fix
+				   // Victory Rush
                else if (m_spellInfo->SpellFamilyFlags[1] & 0x100)
                {
-                   damage = uint32(damage * m_caster->GetTotalAttackPowerValue(BASE_ATTACK) / 100);
-                   m_caster->RemoveAurasDueToSpell(32216); // Victorious
+                   //damage = uint32(damage * m_caster->GetTotalAttackPowerValue(BASE_ATTACK) / 100);
+					damage = uint32(m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.56); //Test Fix  
+				   m_caster->RemoveAurasDueToSpell(32216); // Victorious
                }
 
                // Cleave
