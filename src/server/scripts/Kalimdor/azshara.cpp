@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2006-2011 ScriptDev2 <http://www.scriptdev2.com/>
  *
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2010-2011 Project StarGate
  *
  * Copyright (C) 2010-2011 Project StarGate
  *
