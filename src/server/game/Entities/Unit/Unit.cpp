@@ -5990,7 +5990,8 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                         triggerAmount += triggerAmount / 4;
                     triggered_spell_id = 63106;
                     target = this;
-                    basepoints0 = int32(damage*triggerAmount/100);
+                    //basepoints0 = int32(damage*triggerAmount/100);
+					basepoints0 = int32(GetHealth()*triggerAmount/100); //Test Fix
                     break;
                 }
                 // Glyph of Shadowflame

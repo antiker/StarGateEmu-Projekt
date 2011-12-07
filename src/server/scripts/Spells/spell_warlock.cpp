@@ -358,6 +358,33 @@ public:
     }
 };
 
+class spell_warl_drain_life : public SpellScriptLoader
+
+{
+        public:
+            spell_warl_drain_life() : SpellScriptLoader("spell_warl_drain_life") { }
+            class spell_warl_drain_life_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_warl_drain_life_AuraScript);
+            void OnPeriodic(AuraEffect const* /*aurEff*/)
+        {
+            int32 bp = 2; // Normal, re 2% 
+        if(AuraEffect const* aurEff = GetCaster()->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_WARLOCK, 3223, 0))
+           if(GetCaster()->HealthBelowPct(25))
+                 bp += int32(aurEff->GetAmount());
+            GetCaster()->CastCustomSpell(GetCaster(), 89653, &bp, NULL, NULL, true);
+        }
+        void Register()
+        {
+         OnEffectPeriodic += AuraEffectPeriodicFn(spell_warl_drain_life_AuraScript::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        }
+        };
+        AuraScript* GetAuraScript() const
+        {
+         return new spell_warl_drain_life_AuraScript();
+        }
+};
+
 void AddSC_warlock_spell_scripts()
 {
     new spell_warl_demonic_empowerment();
@@ -368,4 +395,5 @@ void AddSC_warlock_spell_scripts()
     new spell_warl_immolate();
     new spell_warl_seed_of_corruption();
     new spell_warl_shadow_bite();
+	new spell_warl_drain_life();
 }
