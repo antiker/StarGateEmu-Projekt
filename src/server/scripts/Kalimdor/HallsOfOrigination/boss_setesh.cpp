@@ -1,54 +1,103 @@
-/*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "ScriptPCH.h"
-#include "halls_of_origination.h"
 
-class boss_setesh : public CreatureScript
+/*
+Script 50%
+*/
+#define spell_chaos 77069 // Trait du Chaos
+#define spell_chaos_H 89873
+#define spell_vide 77030
+#define spell_explo 76681
+#define spell_graine 76870
+
+// Setesh seeks a portal every 25 seconds
+
+#define SAY_AGGRO "Ce que vous ne contrôlez pas vous fait peur. Mais pourrez-vous contrôler votre peur ?"
+#define SAY_DIED "Oui ! Domptez… votre… haine…"
+
+class boss_setesh: public CreatureScript
 {
 public:
-    boss_setesh() : CreatureScript("boss_setesh") { }
+ boss_setesh() : CreatureScript("boss_setesh") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+ struct boss_seteshAI : public ScriptedAI
     {
-        return new boss_seteshAI (creature);
-    }
+        boss_seteshAI(Creature *c) : ScriptedAI(c) {}
 
-    struct boss_seteshAI : public ScriptedAI
-    {
-        boss_seteshAI(Creature* creature) : ScriptedAI(creature)
+uint32 chaos;
+uint32 vide;
+uint32 explo;
+uint32 graine;
+
+        void Reset()
         {
-            instance = creature->GetInstanceScript();
+           chaos = 5000;
+vide = 10000;
+explo = 7000;
+graine = 15000;
         }
 
-        InstanceScript* instance;
-
-        void Reset() {}
-
-        void EnterCombat(Unit* /*who*/) {}
-
-        void UpdateAI(const uint32 Diff)
+        void EnterCombat(Unit* /*who*/)
         {
-            if (!UpdateVictim())
-                return;
+me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+                if (!UpdateVictim())
+                    return;
+           
+            if (chaos <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, IsHeroic() ? spell_chaos_H : spell_chaos);
+                chaos = 5000;
+            }
+            else
+                chaos -= diff;
+
+            if (vide <= diff)
+            {
+                DoCast(me->getVictim(), spell_vide);
+                vide = 10000;
+            }
+            else
+                vide -= diff;
+
+            if (explo <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_explo);
+                explo = 7000;
+            }
+            else
+                explo -= diff;
+
+            if (graine <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_graine);
+                graine = 15000;
+            }
+            else
+                graine -= diff;
+
+if (!UpdateVictim())
+                    return;
 
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_seteshAI (pCreature);
+    }
+
 };
 
 void AddSC_boss_setesh()

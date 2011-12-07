@@ -1,143 +1,103 @@
- /*
- * Copyright (C) 2010-2011 SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+#define SPELL_ALPHA_BEAMS 39788
+#define H_SPELL_ALPHA_BEAMS 39788
+#define SPELL_CRUMBLING_RUIN 75609
+#define H_SPELL_CRUMBLING_RUIN 91206
+//#define SPELL_DESTRUCTION_PROTOCOL 77437
+#define SPELL_NEMESIS_STRIKE 75604
+#define H_SPELL_NEMESIS_STRIKE 91175
+#define SPELL_OMEGA_STANCE 75622
+#define H_SPELL_OMEGA_STANCE 91208
 
-#include"ScriptPCH.h"
-#include"WorldPacket.h"
-#include"halls_of_origination.h"
-#include"ScriptMgr.h"
-#include"ScriptedCreature.h"
-#include"SpellScript.h"
-#include"SpellAuraEffects.h"
+#define SAY_AGGRO "."
+#define SAY_DIED "…"
+#define SAY_OMEGA "."
 
-enum ScriptTexts
+class boss_anraphet: public CreatureScript
 {
-    SAY_INTRO                  = 0,
-    SAY_AGGRO                  = 1,
-    SAY_KILL_1                 = 2,
-    SAY_KILL_2                 = 3,
-    SAY_OMEGA                  = 4,
-    SAY_DEATH                  = 5,
-};
+public:
+ boss_anraphet() : CreatureScript("boss_anraphet") { }
 
-enum Spells
-{
-    SPELL_ALPHA_BEAMS          = 39788,
-    SPELL_CRUMBLING_RUIN       = 75609,
-    H_SPELL_CRUMBLING_RUIN     = 91206,
-    SPELL_DESTRUCTION_PROTOCOL = 77437,
-    SPELL_NEMESIS_STRIKE       = 75604,
-    H_SPELL_NEMESIS_STRIKE     = 91175,
-    SPELL_OMEGA_STANCE         = 75622,
-    H_SPELL_OMEGA_STANCE       = 91208,
-};
+ struct boss_anraphetAI : public ScriptedAI
+    {
+        boss_anraphetAI(Creature *c) : ScriptedAI(c) {}
 
-enum Events
-{
-    EVENT_ALPHA_BEAMS          = 1,
-    EVENT_CRUMBLING_RUIN       = 2,
-    EVENT_DESTRUCTION_PROTOCOL = 3,
-    EVENT_NEMESIS_STRIKE       = 4,
-    EVENT_OMEGA_STANCE         = 5,
-};
+uint32 nemesis;
+uint32 rayon;
+uint32 omega;
+uint32 ruine;
 
-class boss_anraphet : public CreatureScript
-{
-    public:
-        boss_anraphet() : CreatureScript("boss_anraphet") { }
-
-        CreatureAI* GetAI(Creature* pCreature) const
+        void Reset()
         {
-            return new boss_anraphetAI(pCreature);
+           nemesis = 2000;
+rayon = 1000;
+omega = 14000;
+ruine = 16000;
         }
-        struct boss_anraphetAI : public ScriptedAI
+
+        void EnterCombat(Unit* /*who*/)
         {
-            boss_anraphetAI(Creature* pCreature) : ScriptedAI(pCreature)
-            {
-                pInstance = pCreature->GetInstanceScript();
-            }
+me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        }
 
-            InstanceScript *pInstance;
-            EventMap events;
-            bool check_in;
+        void JustDied(Unit* /*killer*/)
+        {
+me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
+        }
 
-            void Reset()
-            {
-                events.Reset();
-
-                if (pInstance && (pInstance->GetData(DATA_ANRAPHET_EVENT) != DONE && !check_in))
-                   pInstance->SetData(DATA_ANRAPHET_EVENT, NOT_STARTED);
-                check_in = false;
-            }
-
-            void JustDied(Unit* /*Kill*/)
-            {
-                DoScriptText(SAY_DEATH, me);
-                if (pInstance)
-                    pInstance->SetData(DATA_ANRAPHET_EVENT, DONE);
-            }
-
-            void EnterCombat(Unit* /*Ent*/)
-            {
-                DoScriptText(SAY_AGGRO, me);
-				if (pInstance)
-                    pInstance->SetData(DATA_ANRAPHET_EVENT, IN_PROGRESS);
-
-                DoZoneInCombat();
-			}
-
-            void KilledUnit(Unit* /*Killed*/)
-            {
-                DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2), me);
-            }
-
-            void UpdateAI(const uint32 uiDiff)
-            {
+        void UpdateAI(const uint32 diff)
+        {
                 if (!UpdateVictim())
-                   return;
-                events.Update(uiDiff);
-
-                while(uint32 eventId = events.ExecuteEvent())
-                {
-                    switch(eventId)
-                    {
-                        case EVENT_ALPHA_BEAMS:
-                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, true))
-                                DoCast(me->getVictim(), SPELL_ALPHA_BEAMS);
-                                events.ScheduleEvent(EVENT_ALPHA_BEAMS, 1000);
-                            break;
-                        case EVENT_CRUMBLING_RUIN:
-                            DoCast(me->getVictim(), SPELL_CRUMBLING_RUIN);
-                            events.ScheduleEvent(EVENT_CRUMBLING_RUIN, urand(10000, 16000));
-                            break;
-                        case EVENT_NEMESIS_STRIKE:
-                            DoCast(me->getVictim(), SPELL_NEMESIS_STRIKE);
-                            events.ScheduleEvent(EVENT_NEMESIS_STRIKE, 2000);
-                            break;
-                        case EVENT_OMEGA_STANCE:
-                            DoCast(me, SPELL_OMEGA_STANCE);
-                            events.ScheduleEvent(EVENT_OMEGA_STANCE, 14000);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                DoMeleeAttackIfReady();
+                    return;
+           
+            if (nemesis <= diff)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, SPELL_NEMESIS_STRIKE);
+                nemesis = 2000;
             }
-        };
+            else
+                nemesis -= diff;
+
+            if (omega <= diff)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, SPELL_OMEGA_STANCE);
+me->MonsterYell(SAY_OMEGA, LANG_UNIVERSAL, NULL);
+                omega = 14000;
+            }
+            else
+                omega -= diff;
+
+            if (rayon <= diff)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, SPELL_ALPHA_BEAMS);
+                rayon = 1000;
+            }
+            else
+                rayon -= diff;
+
+            if (ruine <= diff)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, SPELL_CRUMBLING_RUIN);
+                ruine = 16000;
+            }
+            else
+                ruine -= diff;
+
+if (!UpdateVictim())
+                    return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_anraphetAI (pCreature);
+    }
+
 };
 
 void AddSC_boss_anraphet()

@@ -21,7 +21,7 @@
 enum Data
 {
     DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT,
-    DATA_EARTHRAGER_PTAH_EVENT,
+    DATA_PTAH_EVENT,
     DATA_ANRAPHET_EVENT,
     DATA_ISISET_EVENT,
     DATA_AMMUNAE_EVENT,
@@ -33,7 +33,7 @@ enum Data
 enum Data64
 {
     DATA_TEMPLE_GUARDIAN_ANHUUR,
-    DATA_EARTHRAGER_PTAH,
+    DATA_PTAH,
     DATA_ANRAPHET,
     DATA_ISISET,
     DATA_AMMUNAE,
@@ -52,7 +52,7 @@ enum CreatureIds
     // Dungeon Bosses
 
     BOSS_TEMPLE_GUARDIAN_ANHUUR = 39425,
-    BOSS_EARTHRAGER_PTAH        = 39428,
+    BOSS_PTAH			        = 39428,
     BOSS_ANRAPHET               = 39788,
     BOSS_ISISET                 = 39587,
     BOSS_AMMUNAE                = 39731,
@@ -79,9 +79,15 @@ enum CreatureIds
     NPC_WATER_WARDEN            = 39802,
     NPC_AIR_WARDEN              = 39803,
 
+    MOB_HORROR = 40810,
+	MOB_SCARAB = 40458,
+
     // Various NPCs
 
     NPC_BRANN_BRONZEBEARD       = 49941,
 };
+
+
+
 
 #endif

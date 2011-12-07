@@ -1,54 +1,84 @@
-/*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "ScriptPCH.h"
-#include "halls_of_origination.h"
 
-class boss_isiset : public CreatureScript
+#define spell_supernova 74136 // Supernova
+#define spell_astral 74366 // Pluie Astral
+#define spell_bouclier 74372 // Bouclier
+
+#define SAY_AGGRO "Des siècles de ténèbres… par votre faute."
+#define SAY_DIED "Mon lustre… se ternit."
+
+class boss_isiset: public CreatureScript
 {
 public:
-    boss_isiset() : CreatureScript("boss_isiset") { }
+ boss_isiset() : CreatureScript("boss_isiset") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+ struct boss_isisetAI : public ScriptedAI
     {
-        return new boss_isisetAI (creature);
-    }
+        boss_isisetAI(Creature *c) : ScriptedAI(c) {}
 
-    struct boss_isisetAI : public ScriptedAI
-    {
-        boss_isisetAI(Creature* creature) : ScriptedAI(creature)
+uint32 supernova;
+        uint32 astral;
+        uint32 bouclier_Timer;
+
+        void Reset()
         {
-            instance = creature->GetInstanceScript();
+           supernova = 10000;
+           astral = 18000;
+bouclier_Timer = 15000;
         }
 
-        InstanceScript* instance;
-
-        void Reset() {}
-
-        void EnterCombat(Unit* /*who*/) {}
-
-        void UpdateAI(const uint32 Diff)
+        void EnterCombat(Unit* /*who*/)
         {
-            if (!UpdateVictim())
-                return;
+me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+                if (!UpdateVictim())
+                    return;
+
+            if (supernova<= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_supernova);
+                supernova = 10000;
+            }
+            else
+                supernova -= diff;
+
+            if (astral<= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_astral);
+                astral = 18000;
+            }
+            else
+                astral -= diff;
+
+if (!UpdateVictim())
+                    return;
+
+if (bouclier_Timer <= diff)
+            {
+                DoCast(me->getVictim(), spell_bouclier, true);
+
+                bouclier_Timer = 15000;
+            } else bouclier_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_isisetAI (pCreature);
+    }
+
 };
 
 void AddSC_boss_isiset()

@@ -47,7 +47,7 @@ public:
         uint32 uiEncounter[ENCOUNTERS];
 
         uint64 uiTempleGuardianAnhuur;
-        uint64 uiEarthragerPtah;
+        uint64 uiPtah;
         uint64 uiAnraphet;
         uint64 uiIsiset;
         uint64 uiAmmunae;
@@ -59,7 +59,7 @@ public:
         void Initialize()
         {
             uiTempleGuardianAnhuur = 0;
-            uiEarthragerPtah = 0;
+            uiPtah = 0;
             uiAnraphet = 0;
             uiIsiset = 0;
             uiAmmunae = 0;
@@ -89,8 +89,8 @@ public:
                 case BOSS_TEMPLE_GUARDIAN_ANHUUR:
                     uiTempleGuardianAnhuur = pCreature->GetGUID();
                     break;
-                case BOSS_EARTHRAGER_PTAH:
-                    uiEarthragerPtah = pCreature->GetGUID();
+                case BOSS_PTAH:
+                    uiPtah = pCreature->GetGUID();
                     break;
                 case BOSS_ANRAPHET:
                     uiAnraphet = pCreature->GetGUID();
@@ -114,7 +114,7 @@ public:
                 {
                 case GO_ORIGINATION_ELEVATOR:
                      OriginationElevatorGUID = go->GetGUID();
-                     if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE && GetData(DATA_ANRAPHET) == DONE && GetData(DATA_EARTHRAGER_PTAH) == DONE)
+                     if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE && GetData(DATA_ANRAPHET) == DONE && GetData(DATA_PTAH) == DONE)
                          {
                             go->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                             go->SetGoState(GO_STATE_READY);
@@ -129,8 +129,8 @@ public:
             {
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     return uiTempleGuardianAnhuur;
-                case DATA_EARTHRAGER_PTAH:
-                    return uiEarthragerPtah;
+                case DATA_PTAH:
+                    return uiPtah;
                 case DATA_ANRAPHET:
                     return uiAnraphet;
                 case DATA_ISISET:
@@ -152,7 +152,7 @@ public:
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     uiEncounter[0] = data;
                     break;
-                case DATA_EARTHRAGER_PTAH:
+                case DATA_PTAH:
                     uiEncounter[1] = data;
                     break;
                 case DATA_ANRAPHET:
@@ -182,7 +182,7 @@ public:
             {
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     return uiEncounter[0];
-                case DATA_EARTHRAGER_PTAH:
+                case DATA_PTAH:
                     return uiEncounter[1];
                 case DATA_ANRAPHET:
                     return uiEncounter[2];

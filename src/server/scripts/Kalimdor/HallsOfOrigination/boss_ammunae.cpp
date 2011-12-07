@@ -1,55 +1,88 @@
-/*
- * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+#define spell_floraison 76043
+#define spell_conso 75790
 
-#include "ScriptPCH.h"
-#include "halls_of_origination.h"
+#define SAY_AGGRO "!"
+#define SAY_DIED "…"
 
-class boss_ammunae : public CreatureScript
+/*######
+##Ammunae
+######*/
+class boss_ammunae: public CreatureScript
 {
 public:
-    boss_ammunae() : CreatureScript("boss_ammunae") { }
+ boss_ammunae() : CreatureScript("boss_ammunae") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+ struct boss_ammunaeAI : public ScriptedAI
     {
-        return new boss_ammunaeAI (creature);
-    }
+        boss_ammunaeAI(Creature *c) : ScriptedAI(c) {}
 
-    struct boss_ammunaeAI : public ScriptedAI
-    {
-        boss_ammunaeAI(Creature* creature) : ScriptedAI(creature)
+uint32 floraison;
+        uint32 conso;
+
+        void Reset()
         {
-            instance = creature->GetInstanceScript();
+           floraison = 15000;
+conso = 5000;
         }
 
-        InstanceScript* instance;
-
-        void Reset() {}
-
-        void EnterCombat(Unit* /*who*/) {}
-
-        void UpdateAI(const uint32 Diff)
+        void EnterCombat(Unit* /*who*/)
         {
-            if (!UpdateVictim())
-                return;
+me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        }
 
-            DoMeleeAttackIfReady();
+        void JustDied(Unit* /*killer*/)
+        {
+me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+                if (!UpdateVictim())
+                    return;
+
+            if (floraison<= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_floraison);
+                floraison = 15000;
+            }
+            else
+                floraison -= diff;
+
+            if (conso<= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                                DoCast(pTarget, spell_conso);
+                conso = 5000;
+            }
+            else
+                conso -= diff;
+
+if (!UpdateVictim())
+                    return;
+
+DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_ammunaeAI (pCreature);
+    }
+
 };
+
+/*######
+##Cosse de Boutures
+######*/
+
+/*######
+##Fleur de pétale-de-sang
+######*/
+
+/*######
+##Spore
+######*/
 
 void AddSC_boss_ammunae()
 {
