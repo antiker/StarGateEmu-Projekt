@@ -61,11 +61,12 @@ enum VehicleSpells
     VEHICLE_SPELL_PARACHUTE                      = 45472
 };
 
+
 struct VehicleSeat
 {
     explicit VehicleSeat(VehicleSeatEntry const *_seatInfo) : seatInfo(_seatInfo), passenger(NULL) {}
     VehicleSeatEntry const *seatInfo;
-    Unit* passenger;
+    uint64 passenger;
 };
 
 struct VehicleAccessory
@@ -92,6 +93,7 @@ class Vehicle
 {
     friend class Unit;
     friend class WorldSession;
+
     public:
         explicit Vehicle(Unit *unit, VehicleEntry const *vehInfo);
         virtual ~Vehicle();
@@ -122,6 +124,9 @@ class Vehicle
     protected:
         uint16 GetExtraMovementFlagsForBase() const;
         VehicleSeatEntry const* GetSeatForPassenger(Unit* passenger);
+
+    private:
+        SeatMap::iterator GetSeatIteratorForPassenger(Unit* passenger);
 
     protected:
         Unit *me;
