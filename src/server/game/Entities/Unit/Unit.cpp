@@ -5982,6 +5982,20 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
             }
             switch (dummySpell->Id)
             {
+				case 18119: // Improved Soul Fire rank 1
+                case 18120: // Improved Soul Fire rank 2
+                {
+                    triggered_spell_id = 85383;
+                    basepoints0 = triggerAmount;
+                    target = this;
+                    break;
+                }
+				case 28176: // Fel Armor
+                {
+                    triggered_spell_id = 96379;
+                    basepoints0 = CalculatePctN(int32(damage), triggerAmount);
+                    break;
+                }
                 // Siphon Life
                 case 63108:
                 {
@@ -6019,27 +6033,22 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     AuraEffectList const& SoulLeechAuras = GetAuraEffectsByType(SPELL_AURA_DUMMY);
                     for (Unit::AuraEffectList::const_iterator i = SoulLeechAuras.begin(); i != SoulLeechAuras.end(); ++i)
                     {
-                        if ((*i)->GetId() == 54117 || (*i)->GetId() == 54118)
+                        if ((*i)->GetId() == 54118)
                         {
                             if ((*i)->GetEffIndex() != 0)
                                 continue;
+
                             basepoints0 = int32((*i)->GetAmount());
                             target = GetGuardianPet();
                             if (target)
-                            {
-                                // regen mana for pet
-                                CastCustomSpell(target, 54607, &basepoints0, NULL, NULL, true, castItem, triggeredByAura);
-                            }
+                            CastCustomSpell(target, 54607, &basepoints0, NULL, NULL, true, castItem, triggeredByAura); // regen mana for pet                              
                             // regen mana for caster
                             CastCustomSpell(this, 59117, &basepoints0, NULL, NULL, true, castItem, triggeredByAura);
                             // Get second aura of spell for replenishment effect on party
                             if (AuraEffect const * aurEff = (*i)->GetBase()->GetEffect(1))
                             {
-                                // Replenishment - roll chance
-                                if (roll_chance_i(aurEff->GetAmount()))
-                                {
+                                if (roll_chance_i(aurEff->GetAmount()))     // Replenishment - roll chance
                                     CastSpell(this, 57669, true, castItem, triggeredByAura);
-                                }
                             }
                             break;
                         }
@@ -8788,6 +8797,12 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
             target = pVictim;
             break;
         }
+		// Empowered Imp
+        case 54278:
+        {
+            target = GetCharmerOrOwnerOrSelf();
+            break;
+        }
         default:
             break;
     }
@@ -8828,6 +8843,17 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
 
         // Howling Blast
         this->ToPlayer()->RemoveSpellCategoryCooldown(1248, true);
+    }
+
+	// Death's Advance
+    if (auraSpellInfo->SpellFamilyName == SPELLFAMILY_DEATHKNIGHT && auraSpellInfo->SpellIconID == 3315)
+    {
+        Player* player = ToPlayer();
+        if (!player || player->getClass() != CLASS_DEATH_KNIGHT)
+            return false;
+
+        if (!player->IsBaseRuneSlotsOnCooldown(RUNE_UNHOLY))
+            return false;
     }
 
     // Custom basepoints/target for exist spell
@@ -10607,6 +10633,12 @@ uint32 Unit::SpellDamageBonus(Unit *pVictim, SpellEntry const *spellProto, uint3
     // Custom scripted damage
     switch(spellProto->SpellFamilyName)
     {
+		case SPELLFAMILY_WARRIOR:
+        // Slam
+            if(spellProto->SpellFamilyFlags[2] & 0x200000)
+                if(HasAura(46916)) // Bloodsurge
+                    DoneTotalMod *= 1.20f; // 20% more damage
+            break;
         case SPELLFAMILY_MAGE:
             // Ice Lance
             if (spellProto->SpellIconID == 186)

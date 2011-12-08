@@ -319,7 +319,7 @@ enum Opcodes
     SMSG_AI_REACTION                                 = 0x031CC, // 4.0.6a 13623
     CMSG_SET_SELECTION                               = 0x06488, // 4.0.6a 13623
     CMSG_EQUIPMENT_SET_DELETE                        = 0x0AEA0, // 4.0.6a 13623
-    CMSG_INSTANCE_LOCK_WARNING_RESPONSE              = 0x0E476, //
+    CMSG_INSTANCE_LOCK_WARNING_RESPONSE              = 0x034C4, // 4.0.6a 13623
     CMSG_UNUSED2                                     = 0x10058, //
     CMSG_ATTACKSWING                                 = 0x074A8, // 4.0.6a 13623
     CMSG_ATTACKSTOP                                  = 0x062C4, // 4.0.6a 13623
@@ -327,7 +327,7 @@ enum Opcodes
     SMSG_ATTACKSTOP                                  = 0x06DCC, // 4.0.6a 13623
     SMSG_ATTACKSWING_NOTINRANGE                      = 0x036C4, // 4.0.6a 13623
     SMSG_ATTACKSWING_BADFACING                       = 0x067A8, // 4.0.6a 13623
-    SMSG_INSTANCE_LOCK_WARNING_QUERY                 = 0x0B574, //
+    SMSG_INSTANCE_LOCK_WARNING_QUERY                 = 0x07488, // 4.0.6a 13623
     SMSG_ATTACKSWING_DEADTARGET                      = 0x0A7C4, // 4.0.6a 13623
     SMSG_ATTACKSWING_CANT_ATTACK                     = 0x06188, // 4.0.6a 13623
     SMSG_ATTACKERSTATEUPDATE                         = 0x0BBC0, // 4.0.6a 13623
@@ -507,7 +507,7 @@ enum Opcodes
     CMSG_GM_NUKE                                     = 0x1008F, //
     MSG_RANDOM_ROLL                                  = 0x0B7A4, // 4.0.6a 13623
     SMSG_ENVIRONMENTALDAMAGELOG                      = 0x0E1C8, // 4.0.6a 13623
-    CMSG_PLAYER_DIFFICULTY_CHANGE                    = 0x07E5D, //
+    CMSG_PLAYER_DIFFICULTY_CHANGE                    = 0x03F88, // 4.0.6a 13623
     SMSG_RWHOIS                                      = 0x071C8, // 4.0.6a 13623
     SMSG_LFG_PLAYER_REWARD                           = 0x02C88, // 4.0.6a 13623
     SMSG_LFG_TELEPORT_DENIED                         = 0x0EAA0, // 4.0.6a 13623
@@ -700,7 +700,7 @@ enum Opcodes
     CMSG_MOVE_SPLINE_DONE                            = 0x069E8, // 4.0.6a 13623
     CMSG_MOVE_FALL_RESET                             = 0x0E680, // 4.0.6a 13623
     SMSG_INSTANCE_SAVE_CREATED                       = 0x0BBC4, // 4.0.6a 13623
-    SMSG_RAID_INSTANCE_INFO                          = 0x100E7, // 4.0.6a 13623
+    SMSG_RAID_INSTANCE_INFO                          = 0x0A18C, // 4.0.6a 13623
     CMSG_REQUEST_RAID_INFO                           = 0x03DE4, // 4.0.6a 13623
     CMSG_MOVE_TIME_SKIPPED                           = 0x0E180, // 4.0.6a 13623
     CMSG_MOVE_FEATHER_FALL_ACK                       = 0x06EA8, // 4.0.6a 13623
