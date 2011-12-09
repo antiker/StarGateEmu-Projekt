@@ -1,33 +1,16 @@
- /*
-* Copyright (C) 2010-2011 SkyFire <http://www.projectskyfire.org/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include"ScriptPCH.h"
 #include"halls_of_origination.h"
 
 #define ENCOUNTERS 7
 
 /* Boss Encounters
-   Temple Guardian Anhuur
-   Earthrager Ptah
-   Anraphet
-   Isiset
-   Ammunae
-   Setesh
-   Rajh
+Temple Guardian Anhuur
+Earthrager Ptah
+Anraphet
+Isiset
+Ammunae
+Setesh
+Rajh
 */
 
 class instance_halls_of_origination : public InstanceMapScript
@@ -47,7 +30,7 @@ public:
         uint32 uiEncounter[ENCOUNTERS];
 
         uint64 uiTempleGuardianAnhuur;
-        uint64 uiPtah;
+        uint64 uiEarthragerPtah;
         uint64 uiAnraphet;
         uint64 uiIsiset;
         uint64 uiAmmunae;
@@ -55,16 +38,20 @@ public:
         uint64 uiRajh;
         uint64 OriginationElevatorGUID;
         uint64 uiTeamInInstance;
+        uint64 uiAnhuurBridgeGUID;
+		uint64 uiAnhuurDoorGUID;
 
         void Initialize()
         {
             uiTempleGuardianAnhuur = 0;
-            uiPtah = 0;
+            uiEarthragerPtah = 0;
             uiAnraphet = 0;
             uiIsiset = 0;
             uiAmmunae = 0;
             uiSetesh = 0;
             uiRajh = 0;
+            uiAnhuurBridgeGUID = 0;
+			uiAnhuurDoorGUID = 0;
             uint64 OriginationElevatorGUID = 0;
 
             for(uint8 i=0; i<ENCOUNTERS; ++i)
@@ -82,45 +69,55 @@ public:
             return false;
         }
 
-        void OnCreatureCreate(Creature* pCreature, bool)
+        void OnCreatureCreate(Creature* creature, bool)
         {
-            switch(pCreature->GetEntry())
+            switch(creature->GetEntry())
             {
                 case BOSS_TEMPLE_GUARDIAN_ANHUUR:
-                    uiTempleGuardianAnhuur = pCreature->GetGUID();
+                    uiTempleGuardianAnhuur = creature->GetGUID();
                     break;
-                case BOSS_PTAH:
-                    uiPtah = pCreature->GetGUID();
+                case BOSS_EARTHRAGER_PTAH:
+                    uiEarthragerPtah = creature->GetGUID();
                     break;
                 case BOSS_ANRAPHET:
-                    uiAnraphet = pCreature->GetGUID();
+                    uiAnraphet = creature->GetGUID();
                     break;
                 case BOSS_ISISET:
-                    uiIsiset = pCreature->GetGUID();
+                    uiIsiset = creature->GetGUID();
                     break;
                 case BOSS_AMMUNAE:
-                    uiAmmunae = pCreature->GetGUID();
+                    uiAmmunae = creature->GetGUID();
                     break;
                 case BOSS_SETESH:
-                    uiSetesh = pCreature->GetGUID();
+                    uiSetesh = creature->GetGUID();
                 case BOSS_RAJH:
-                    uiRajh = pCreature->GetGUID();
+                    uiRajh = creature->GetGUID();
             }
         }
 
-    void OnGameObjectCreate(GameObject* go)
+        void OnGameObjectCreate(GameObject* go)
         {
             switch (go->GetEntry()) /* Elevator active switch to second level. Need more info on Id */
-                {
+            {
                 case GO_ORIGINATION_ELEVATOR:
-                     OriginationElevatorGUID = go->GetGUID();
-                     if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE && GetData(DATA_ANRAPHET) == DONE && GetData(DATA_PTAH) == DONE)
-                         {
+                    OriginationElevatorGUID = go->GetGUID();
+                    if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE && GetData(DATA_ANRAPHET) == DONE && GetData(DATA_EARTHRAGER_PTAH) == DONE)
+                        {
                             go->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                             go->SetGoState(GO_STATE_READY);
-                         }
-                     break;
-                }
+                        }
+                    break;
+                case GO_ANHUUR_BRIDGE:
+                    uiAnhuurBridgeGUID = go->GetGUID();
+                    if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE)
+                            HandleGameObject(uiAnhuurBridgeGUID, true, go);
+                    break;
+					case GO_ANHUUR_DOOR:
+                    uiAnhuurDoorGUID = go->GetGUID();
+                    if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE)
+                            HandleGameObject(uiAnhuurDoorGUID, true, go);
+                    break;
+            }
         }
 
         uint64 GetData64(uint32 identifier)
@@ -129,8 +126,8 @@ public:
             {
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     return uiTempleGuardianAnhuur;
-                case DATA_PTAH:
-                    return uiPtah;
+                case DATA_EARTHRAGER_PTAH:
+                    return uiEarthragerPtah;
                 case DATA_ANRAPHET:
                     return uiAnraphet;
                 case DATA_ISISET:
@@ -145,14 +142,14 @@ public:
             return 0;
         }
 
-        void SetData(uint32 type, uint32 data)
+        void SetData(uint32 type,uint32 data)
         {
             switch(type)
             {
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     uiEncounter[0] = data;
                     break;
-                case DATA_PTAH:
+                case DATA_EARTHRAGER_PTAH:
                     uiEncounter[1] = data;
                     break;
                 case DATA_ANRAPHET:
@@ -172,8 +169,8 @@ public:
                     break;
             }
 
-         if (data == DONE)
-             SaveToDB();
+            if (data == DONE)
+                SaveToDB();
         }
 
         uint32 GetData(uint32 type)
@@ -182,7 +179,7 @@ public:
             {
                 case DATA_TEMPLE_GUARDIAN_ANHUUR:
                     return uiEncounter[0];
-                case DATA_PTAH:
+                case DATA_EARTHRAGER_PTAH:
                     return uiEncounter[1];
                 case DATA_ANRAPHET:
                     return uiEncounter[2];
@@ -204,7 +201,7 @@ public:
 
             std::string str_data;
             std::ostringstream saveStream;
-            saveStream << "H O" << uiEncounter[0] << " " << uiEncounter[1]  << " " << uiEncounter[2]  << " " << uiEncounter[3] << " " << uiEncounter[4] << " " << uiEncounter[5] << " " << uiEncounter[6];
+            saveStream << "H O" << uiEncounter[0] << " " << uiEncounter[1] << " " << uiEncounter[2] << " " << uiEncounter[3] << " " << uiEncounter[4] << " " << uiEncounter[5] << " " << uiEncounter[6];
             str_data = saveStream.str();
 
             OUT_SAVE_INST_DATA_COMPLETE;

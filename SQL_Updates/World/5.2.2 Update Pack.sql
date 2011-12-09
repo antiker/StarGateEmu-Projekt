@@ -1,5 +1,5 @@
 UPDATE `creature_template` SET `ScriptName`='boss_ammunae' WHERE `entry`=39731;
-UPDATE `creature_template` SET `ScriptName`='boss_anhuur' WHERE `entry`=39425;
+UPDATE `creature_template` SET `ScriptName`='boss_temple_guardian_anhuur' WHERE `entry`=39425;
 UPDATE `creature_template` SET `ScriptName`='boss_anraphet' WHERE `entry`=39788;
 UPDATE `creature_template` SET `ScriptName`='boss_isiset' WHERE `entry`=39587;
 UPDATE `creature_template` SET `ScriptName`='boss_ptah' WHERE `entry`=39428;

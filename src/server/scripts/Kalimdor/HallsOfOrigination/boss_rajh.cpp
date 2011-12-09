@@ -1,124 +1,192 @@
-#define spell_soleil 73872 // Coup de soleil
-#define spell_invocation 80352 // Invocation d'un orbe du soleil
-#define spell_enfer 87653 // Bond du feu d'enfer
-#define spell_vent 89130 // Vents solaires
-#define spell_feu 89131 // Feu solaire
-#define spell_bene 76355 // Bénédiction du soleil
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "ScriptPCH.h"
+#include "halls_of_origination.h"
 
-#define SAY_AGGRO "Sentez-vous cette caresse ? La chaleur bénie du soleil … ?"
-#define SAY_DIED "Lumière étincelante… Emporte-moi."
+enum Spells
+{
+    //Rajh
+    SPELL_SUN_STRIKE = 73872,
+    SPELL_INFERNO_LEAP = 87647, //Value: 32375 to 37625
+    SPELL_INFERNO_LEAP_2 = 89876, //Value: 120250 to 139750
+    SPELL_SUMMON_SUN_ORB = 80352,
+    SPELL_BLESSING_OF_THE_SUN = 76352,
+    SPELL_SUMMON_SOLAR_WIND = 74104,
 
-/*######
-##Rajh
-######*/
-class boss_rajh: public CreatureScript
+    //Solar Wind
+    SPELL_SOLAR_WIND = 89130,
+    SPELL_SOLAR_FIRE = 89131
+};
+
+enum Texts
+{
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_DEATH = 2,
+    SAY_ENERGIZE = 3
+};
+
+enum EnergizeCords
+{
+    //Find cords for the center of room
+    X = 0,
+    Y = 0,
+    Z = 0
+};
+
+enum Events
+{
+    EVENT_SUN_STRIKE = 1,
+    EVENT_INFERNO_LEAP = 2,
+    EVENT_BLESSING_OF_THE_SUN = 3,
+    EVENT_SUMMON_SUN_ORB = 4,
+    EVENT_SUMMON_SOLAR_WIND = 5
+};
+
+class boss_rajh : public CreatureScript
+{
+    public:
+        boss_rajh() : CreatureScript("boss_rajh") { }
+
+        struct boss_rajhAI : public BossAI
+        {
+            boss_rajhAI(Creature* creature) : BossAI(creature, DATA_RAJH_EVENT)
+            {
+                instance = me->GetInstanceScript();
+            }
+
+            InstanceScript* instance;
+
+            void Reset()
+            {
+                if (instance)
+                    instance->SetData(DATA_RAJH_EVENT, NOT_STARTED);
+
+                me->SetPower(POWER_ENERGY, me->GetMaxPower(POWER_ENERGY));
+            }
+
+            void EnterCombat(Unit* /*who*/)
+            {
+                //DoScriptText(SAY_AGGRO, me);
+
+                if (instance)
+                    instance->SetData(DATA_RAJH_EVENT, IN_PROGRESS);
+
+                me->SetPower(POWER_ENERGY, me->GetMaxPower(POWER_ENERGY));
+
+                events.ScheduleEvent(EVENT_SUN_STRIKE, 10000);
+                events.ScheduleEvent(EVENT_INFERNO_LEAP, 15000);
+                events.ScheduleEvent(EVENT_BLESSING_OF_THE_SUN, 12000);
+                events.ScheduleEvent(EVENT_SUMMON_SUN_ORB, 25000);
+                events.ScheduleEvent(EVENT_SUMMON_SOLAR_WIND, 20000);
+
+                DoZoneInCombat();
+            }
+
+            void EnergizeSun()
+            {
+                //DoScriptText(SAY_ENERGIZE, me);
+                me->GetMotionMaster()->MovePoint(0, X, Y, Z);
+                DoCastAOE(SPELL_BLESSING_OF_THE_SUN);
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                if (me->HasUnitState(UNIT_STAT_CASTING))
+                    return;
+
+                while(uint32 eventId = events.ExecuteEvent())
+                {
+                    switch(eventId)
+                    {
+                        case EVENT_SUN_STRIKE:
+                            DoCast(me->getVictim(), SPELL_SUN_STRIKE);
+                            events.ScheduleEvent(EVENT_SUN_STRIKE, 10000);
+                            break;
+                        case EVENT_INFERNO_LEAP:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, true))
+                                DoCast(target, SPELL_INFERNO_LEAP);
+                            events.ScheduleEvent(EVENT_INFERNO_LEAP, urand(15000, 22000));
+                            break;
+                        case EVENT_BLESSING_OF_THE_SUN:
+                            if (me->GetPower(POWER_ENERGY) == 0)
+                                EnergizeSun();
+                            events.ScheduleEvent(EVENT_BLESSING_OF_THE_SUN, 15000);
+                            break;
+                        case EVENT_SUMMON_SUN_ORB:
+                            DoCast(SPELL_SUMMON_SUN_ORB);
+                            events.ScheduleEvent(EVENT_SUMMON_SUN_ORB, 25000);
+                            break;
+                        case EVENT_SUMMON_SOLAR_WIND:
+                            DoCast(SPELL_SUMMON_SOLAR_WIND);
+                            events.ScheduleEvent(EVENT_SUMMON_SOLAR_WIND, 30000);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                DoMeleeAttackIfReady();
+            }
+
+            void JustDied(Unit* /*who*/)
+            {
+                //DoScriptText(SAY_DEATH, me);
+
+                if (instance)
+                    instance->SetData(DATA_RAJH_EVENT, DONE);
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_rajhAI(creature);
+        }
+};
+
+class mob_solar_wind : public CreatureScript
 {
 public:
- boss_rajh() : CreatureScript("boss_rajh") { }
+    mob_solar_wind() : CreatureScript("mob_solar_wind") { }
 
- struct boss_rajhAI : public ScriptedAI
+    CreatureAI* GetAI(Creature* creature) const
     {
-        boss_rajhAI(Creature *c) : ScriptedAI(c) {}
+        return new mob_solar_windAI(creature);
+    }
 
-uint32 soleil;
-        uint32 invocation;
-uint32 enfer;
-uint32 vent;
-uint32 feu;
-uint32 bene;
-
-        void Reset()
+    struct mob_solar_windAI : public ScriptedAI
+    {
+        mob_solar_windAI(Creature* creature) : ScriptedAI(creature)
         {
-           soleil = 5000;
-invocation = 10000;
-           enfer = 3000;
-vent = 60000;
-           feu = 15000;
-bene = 4000;
+            m_pInstance = (InstanceScript*)creature->GetInstanceScript();
+            Reset();
         }
+
+        InstanceScript* m_pInstance;
 
         void EnterCombat(Unit* /*who*/)
         {
-me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoCast(me, SPELL_SOLAR_FIRE);
+        }
+
+        void Reset()
+        {
+            me->SetReactState(REACT_PASSIVE);
         }
 
         void JustDied(Unit* /*killer*/)
         {
-me->MonsterYell(SAY_DIED, LANG_UNIVERSAL, NULL);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-                if (!UpdateVictim())
-                    return;
-
-            if (soleil<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_soleil);
-                soleil = 5000;
-            }
-            else
-                soleil -= diff;
-
-            if (invocation<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_invocation);
-                invocation = 10000;
-            }
-            else
-                invocation -= diff;
-
-            if (enfer<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_enfer);
-                enfer = 3000;
-            }
-            else
-                enfer -= diff;
-
-            if (vent<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_vent);
-                vent = 60000;
-            }
-            else
-                vent -= diff;
-
-            if (feu<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_feu);
-                feu = 15000;
-            }
-            else
-                feu -= diff;
-
-            if (bene<= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                                DoCast(pTarget, spell_bene);
-                bene = 4000;
-            }
-            else
-                bene -= diff;
-
-if (!UpdateVictim())
-                    return;
+            // used to despawn corpse immediately
+            me->DespawnOrUnsummon();
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_rajhAI (pCreature);
-    }
-
 };
 
 void AddSC_boss_rajh()
 {
-    new boss_rajh();
+    new boss_rajh;
+    new mob_solar_wind;
 }

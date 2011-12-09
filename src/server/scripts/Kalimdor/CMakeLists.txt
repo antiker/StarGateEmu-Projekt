@@ -60,8 +60,8 @@ set(scripts_STAT_SRCS
   Kalimdor/LostCityOfTheTolvir/boss_high_prophet_barim.cpp
   Kalimdor/HallsOfOrigination/instance_halls_of_origination.cpp
   Kalimdor/HallsOfOrigination/halls_of_origination.h
-  Kalimdor/HallsOfOrigination/boss_anhuur.cpp
-  Kalimdor/HallsOfOrigination/boss_ptah.cpp
+  Kalimdor/HallsOfOrigination/boss_tempelguardian_anhuur.cpp
+  Kalimdor/HallsOfOrigination/boss_earthrager_ptah.cpp
   Kalimdor/HallsOfOrigination/boss_anraphet.cpp
   Kalimdor/HallsOfOrigination/boss_ammunae.cpp
   Kalimdor/HallsOfOrigination/boss_setesh.cpp
