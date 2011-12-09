@@ -777,12 +777,12 @@ enum Opcodes
     MSG_GM_DESTROY_CORPSE                            = 0x10117, //
     CMSG_GM_DESTROY_ONLINE_CORPSE                    = 0x10118, //
     CMSG_ACTIVATETAXIEXPRESS                         = 0x0FC8C, // 4.0.6a 13623
-    SMSG_SET_FACTION_ATWAR                           = 0x02780, // 4.0.6a 13623
+    SMSG_SET_FACTION_ATWAR                           = 0x0EEEC, // 4.0.6a 13623
     SMSG_GAMETIMEBIAS_SET                            = 0x1011A, //
     CMSG_DEBUG_ACTIONS_START                         = 0x1011B, //
     CMSG_DEBUG_ACTIONS_STOP                          = 0x1011C, //
-    CMSG_SET_FACTION_INACTIVE                        = 0x1011D, //
-    CMSG_SET_WATCHED_FACTION                         = 0x1011E, //
+    CMSG_SET_FACTION_INACTIVE                        = 0x0FE84, // 4.0.6a 13623
+    CMSG_SET_WATCHED_FACTION                         = 0x035C8, // 4.0.6a 13623
     MSG_MOVE_TIME_SKIPPED                            = 0x025E4, // 4.0.6a 13623
     SMSG_SPLINE_MOVE_ROOT                            = 0x01E55, // 4.0.6a 13623
     CMSG_SET_EXPLORATION_ALL                         = 0x10120, //

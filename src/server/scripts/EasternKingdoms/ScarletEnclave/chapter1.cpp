@@ -619,6 +619,7 @@ public:
 ######*/
 
 #define DESPAWN_HORSE 52267
+//#define DESPAWN_HORSE 96150
 #define SAY_DARK_RIDER      "The realm of shadows awaits..."
 
 class npc_dark_rider_of_acherus : public CreatureScript
@@ -639,6 +640,11 @@ public:
         uint32 Phase;
         bool Intro;
         uint64 TargetGUID;
+
+		void SetGUID(uint64 guid, int32 /*id*/)
+        {
+            TargetGUID = guid;
+        }
 
         void Reset()
         {
@@ -667,14 +673,19 @@ public:
                             DoCast(pTarget, DESPAWN_HORSE, true);
                         PhaseTimer = 3000;
                         Phase = 2;
-                        break;
+						//if (Creature* miner = Unit::GetCreature(*me, TargetGUID))
+						//if (Creature* miner = Unit::GetCreature(*me, TargetGUID))
+						//miner->DisappearAndDie();
+						 break;
                     case 2:
+						//me->SummonCreature(254240, 2347.3f, -5695.7f, 153.9f, 5.6, TEMPSUMMON_CORPSE_DESPAWN, 0);
                         me->SetVisible(false);
                         PhaseTimer = 2000;
                         Phase = 3;
                         break;
                     case 3:
                         me->ForcedDespawn();
+						//me->DespawnOrUnsummon();
                         break;
                     default:
                         break;
@@ -691,7 +702,7 @@ public:
             me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
             me->SetSpeed(MOVE_RUN, 0.4f);
             me->GetMotionMaster()->MoveChase(who);
-            me->SetUInt64Value(UNIT_FIELD_TARGET, TargetGUID);
+            //me->SetUInt64Value(UNIT_FIELD_TARGET, TargetGUID);
             Intro = true;
         }
     };

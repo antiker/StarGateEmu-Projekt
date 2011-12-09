@@ -2898,8 +2898,8 @@ void AuraEffect::HandleShapeshiftBoosts(Unit *target, bool apply) const
             // Leader of the Pack
             if (target->ToPlayer()->HasSpell(17007))
             {
-                SpellEntry const *spellInfo = sSpellStore.LookupEntry(24932);
-                if (spellInfo && spellInfo->Stances & (1<<(GetMiscValue()-1)))
+                target->RemoveAurasDueToSpell(24932);
+                if (GetMiscValue() == FORM_CAT || GetMiscValue() == FORM_DIREBEAR || GetMiscValue() == FORM_BEAR)  
                     target->CastSpell(target, 24932, true, NULL, this);
             }
             // Improved Barkskin - apply/remove armor bonus due to shapeshift
@@ -2989,6 +2989,7 @@ void AuraEffect::HandleShapeshiftBoosts(Unit *target, bool apply) const
     }
     else
     {
+		target->RemoveAurasDueToSpell(24932); // Rastro lider de la manada
         if (spellId)
             target->RemoveAurasDueToSpell(spellId);
         if (spellId2)
