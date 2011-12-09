@@ -1,0 +1,114 @@
+InI
+Grim_Batol
+
+Boss:	Erudax
+Boss:	Drahga
+Boss:	Throngus
+Boss:	General Umbriss
+Boss:	Erudax
+Mob:	Malveillant
+Mob:	Habitant
+Mob:	Valiona
+
+
+InI
+ThroneOfTheTides
+
+Boss:	Ozumat
+Boss:	Erunak Stonespeaker
+Boss:	Mindbender Ghursha
+Boss:	Lady Nazjar
+Boss:	Commander Ulthok
+
+
+InI
+Blackrock Caverns
+
+Boss:	Corla
+Boss:	Romogg Bonecrusher
+Boss:	Karsh
+Boss:	Bella
+Boss:	Lord Obsidius
+Mob:	Shade Obsidius
+Mob:	Chains Of Woe
+
+InI
+HallsOfOrigination
+
+
+Boss:	Ammunae
+Boss:	Anhuur
+Boss:	Anraphet
+Boss:	Isiset
+Boss:	Ptah
+Boss:	Rajh
+Boss:	Setesh
+
+
+Plündermeister-System		/Fix
+Bewegungs-System		/Update
+Reaktionen-System		/Update
+Fall-System			/Update
+InI Schwierigkeiten-System	/Update
+Instanzen-System		/Update
+
+
+Mount:
+
+Abyssisches Seepferdchen	/Fix
+
+
+
+Magier:
+
+Zauber/
+Wasserelementar			/Fix
+
+
+
+Paladin:
+
+Zauber-System/
+Grund Mana			/Update
+
+
+Zauber/
+Weihe				/Fix
+
+
+
+Jäger:
+
+Zauber/
+Schlangengift			/Fix
+
+
+
+Krieger:
+
+Zauber/
+Siegesrausch			/Update
+Siegreich			/Update
+Zerschmettern			/Update
+Unhöfliche Unterbrechung	/Update
+
+
+Hexenmeister:
+
+Zauber/
+Omen der Verdammnis		/Fix
+Schattenbrand			/Fix
+Blutsauger			/Fix
+
+
+
+Todesritter:
+
+Zauber/
+Unaufhaltsamer Tod		/Update
+
+
+Priester
+
+Zauber/
+Lichtbrunnen			/Fix
