@@ -43,14 +43,14 @@ Paladin:		Grund Mana			/Update
 
 
 
-J�ger:			Schlangengift			/Fix
+Jäger:			Schlangengift			/Fix
 
 
 
 Krieger:		Siegesrausch			/Update
 			Siegreich			/Update
 			Zerschmettern			/Update
-			Unh�fliche Unterbrechung	/Update
+			Unhöfliche Unterbrechung	/Update
 
 
 Hexenmeister:		Omen der Verdammnis		/Fix
@@ -64,7 +64,7 @@ Todesritter:		Unaufhaltsamer Tod		/Update
 
 Priester:		Lichtbrunnen			/Fix
 
-Pl�ndermeister-System:		
+Plündermeister-System:		
 /Fix
 
 Bewegungs-System:		
