@@ -54,13 +54,12 @@ class boss_ptah : public CreatureScript
             {
                 instance = me->GetInstanceScript();
             }
-			uint64 GO_Lights_Hall_DoorGUID;
+
             InstanceScript* instance;
             EventMap events;
 
 			void Reset()
             {
-				GO_Lights_Hall_DoorGUID = 0;
                 if (instance)
                     instance->SetData(DATA_EARTHRAGER_PTAH_EVENT, NOT_STARTED);
             }
@@ -76,9 +75,11 @@ class boss_ptah : public CreatureScript
             void JustDied(Unit* /*killer*/)
             {
                 me->MonsterYell(SAY_DIED, 0, 0);
-				GameObject* Door = me->GetMap()->GetGameObject(GO_Lights_Hall_Door);
-                if (Door)
-                    Door->SetGoState(GO_STATE_ACTIVE);
+				//GameObject* Door = me->FindNearestGameObject(GO_Lights_Hall_Door, 20000);
+                //if (Door)
+                //Door->SetGoState(GO_STATE_ACTIVE);
+				me->SummonCreature(39908, -499.269f, 248.134f, 83.518f, 4.657f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+				me->SummonGameObject(GO_Controller, -499.406f, 246.231f, 82.90f, 1.5202f, 0, 0, 0, 0, 0);
             }
 
             void JustSummoned(Creature *pSummoned)
@@ -162,7 +163,24 @@ class boss_ptah : public CreatureScript
     }
 };
 
+class go_lights_hall_door : public GameObjectScript
+{
+public:
+    go_lights_hall_door() : GameObjectScript("go_lights_hall_door") { }
+
+    bool OnGossipHello(Player* pPlayer, GameObject* me)
+	{
+
+     GameObject* Door = me->FindNearestGameObject(GO_Lights_Hall_Door, 20000);
+      if (Door)
+          Door->SetGoState(GO_STATE_ACTIVE);
+
+        return true;
+    }
+};
+
 void AddSC_boss_ptah()
 {
     new boss_ptah();
+	new go_lights_hall_door();
 }
