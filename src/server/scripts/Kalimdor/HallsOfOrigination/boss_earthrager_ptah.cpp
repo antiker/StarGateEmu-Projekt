@@ -4,17 +4,12 @@
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
 #include "SpellAuraEffects.h"
+#include "halls_of_origination.h"
 
 #define SAY_AGGRO "More carrion for the swarm..."
 #define SAY_DIED "Ptah... is... no more..."
 #define SAY_SPELL "Dust to dust."
 
-enum CreatureIds
-{
-    BOSS_EARTHRAGER_PTAH = 39428,
-    MOB_HORROR = 40810,
-    MOB_SCARAB = 40458,
-};
 
 enum Spells
 {
@@ -53,26 +48,37 @@ class boss_ptah : public CreatureScript
     public:
         boss_ptah() : CreatureScript("boss_ptah") {}
 
-        struct boss_ptahAI : public ScriptedAI
+        struct boss_ptahAI : public BossAI
         {
-            boss_ptahAI(Creature* creature) : ScriptedAI(creature), Summons(me)
+			boss_ptahAI(Creature* creature) : BossAI(creature, DATA_EARTHRAGER_PTAH_EVENT)
             {
-                pInstance = creature->GetInstanceScript();
+                instance = me->GetInstanceScript();
             }
-
-            InstanceScript* pInstance;
+			uint64 GO_Lights_Hall_DoorGUID;
+            InstanceScript* instance;
             EventMap events;
-            SummonList Summons;
+
+			void Reset()
+            {
+				GO_Lights_Hall_DoorGUID = 0;
+                if (instance)
+                    instance->SetData(DATA_EARTHRAGER_PTAH_EVENT, NOT_STARTED);
+            }
 
             void EnterCombat(Unit * /*who*/)
             {
                 EnterPhaseGround();
                 me->MonsterYell(SAY_AGGRO, 0, 0);
+				if (instance)
+                    instance->SetData(DATA_EARTHRAGER_PTAH_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* /*killer*/)
             {
                 me->MonsterYell(SAY_DIED, 0, 0);
+				GameObject* Door = me->GetMap()->GetGameObject(GO_Lights_Hall_Door);
+                if (Door)
+                    Door->SetGoState(GO_STATE_ACTIVE);
             }
 
             void JustSummoned(Creature *pSummoned)
@@ -80,12 +86,15 @@ class boss_ptah : public CreatureScript
                 pSummoned->SetInCombatWithZone();
                 if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
                     pSummoned->AI()->AttackStart(pTarget);
-                Summons.Summon(pSummoned);
+				if (instance)
+                    instance->SetData(DATA_EARTHRAGER_PTAH_EVENT, DONE);
+
+
             }
 
             void SummonedCreatureDespawn(Creature *summon)
             {
-                Summons.Despawn(summon);
+                //Summons.Despawn(summon);
             }
 
             void EnterPhaseGround()

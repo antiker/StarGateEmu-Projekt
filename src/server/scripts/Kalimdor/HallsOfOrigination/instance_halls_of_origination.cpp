@@ -36,7 +36,8 @@ public:
         uint64 uiAmmunae;
         uint64 uiSetesh;
         uint64 uiRajh;
-        uint64 OriginationElevatorGUID;
+        uint64 uiLightsBossDoorGUID;
+		uint64 uiLightsHallDoorGUID;
         uint64 uiTeamInInstance;
         uint64 uiAnhuurBridgeGUID;
 		uint64 uiAnhuurDoorGUID;
@@ -52,7 +53,8 @@ public:
             uiRajh = 0;
             uiAnhuurBridgeGUID = 0;
 			uiAnhuurDoorGUID = 0;
-            uint64 OriginationElevatorGUID = 0;
+            uiLightsBossDoorGUID = 0;
+			uiLightsHallDoorGUID = 0;
 
             for(uint8 i=0; i<ENCOUNTERS; ++i)
                 uiEncounter[i] = NOT_STARTED;
@@ -97,22 +99,34 @@ public:
 
         void OnGameObjectCreate(GameObject* go)
         {
-            switch (go->GetEntry()) /* Elevator active switch to second level. Need more info on Id */
+            switch (go->GetEntry()) /* Lights_Boss_Door */
             {
-                case GO_ORIGINATION_ELEVATOR:
-                    OriginationElevatorGUID = go->GetGUID();
-                    if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE && GetData(DATA_ANRAPHET) == DONE && GetData(DATA_EARTHRAGER_PTAH) == DONE)
-                        {
-                            go->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
-                            go->SetGoState(GO_STATE_READY);
-                        }
+                case GO_Lights_Boss_Door:
+                    uiLightsBossDoorGUID = go->GetGUID();
+                    //if (GetData(DATA_FLAME_WARDEN) == DONE && GetData(DATA_EARTH_WARDEN) == DONE && GetData(DATA_WATER_WARDEN) == DONE && GetData(DATA_AIR_WARDEN) == DONE)
+                    if (GetData(DATA_WATER_WARDEN) == DONE)    
+					HandleGameObject(uiLightsBossDoorGUID, true, go);
+
+                            //go->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
+                            go->SetGoState(GO_STATE_ACTIVE);
+                        
+                    break;
+				case GO_Lights_Hall_Door:
+                    uiLightsHallDoorGUID = go->GetGUID();
+                    if (GetData(DATA_EARTHRAGER_PTAH) == DONE)
+                            HandleGameObject(uiLightsHallDoorGUID, true, go);
                     break;
                 case GO_ANHUUR_BRIDGE:
                     uiAnhuurBridgeGUID = go->GetGUID();
                     if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE)
                             HandleGameObject(uiAnhuurBridgeGUID, true, go);
+
+				case GO_ANHUUR_BRIDGE2:
+                    uiAnhuurBridgeGUID = go->GetGUID();
+                    if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE)
+                            HandleGameObject(uiAnhuurBridgeGUID, true, go);
                     break;
-					case GO_ANHUUR_DOOR:
+				case GO_ANHUUR_DOOR:
                     uiAnhuurDoorGUID = go->GetGUID();
                     if (GetData(DATA_TEMPLE_GUARDIAN_ANHUUR) == DONE)
                             HandleGameObject(uiAnhuurDoorGUID, true, go);

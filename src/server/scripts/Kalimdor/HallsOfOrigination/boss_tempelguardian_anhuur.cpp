@@ -53,6 +53,7 @@ enum BossPhases
 {
     PHASE_NORMAL = 1,
     PHASE_SHIELD = 2,
+	Bridge2 = 3,
 };
 
 class boss_temple_guardian_anhuur : public CreatureScript
@@ -79,7 +80,7 @@ class boss_temple_guardian_anhuur : public CreatureScript
             uint8 Phase;
             uint8 PhaseCount;
             uint8 FlameCount;
-
+			uint32 m_uiPhaseTimer; 
             uint32 DivineReckoningTimer;
             uint32 SearingFlameTimer;
 
@@ -87,7 +88,7 @@ class boss_temple_guardian_anhuur : public CreatureScript
             {
                 if (pInstance)
                     pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, NOT_STARTED);
-
+				m_uiPhaseTimer = 60000;
                 Phase = PHASE_NORMAL;
                 PhaseCount = 0;
                 FlameCount = 2;
@@ -126,7 +127,7 @@ class boss_temple_guardian_anhuur : public CreatureScript
                 me->SummonCreature(NPC_PIT_SNAKE,SpawnPosition[x],TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0);
 				PhaseCount++;
                 Phase = PHASE_NORMAL;
-				if (Creature *light1 = me->SummonCreature(40183, -603.4f, 334.3f, 65.4f, 3.12, TEMPSUMMON_CORPSE_DESPAWN, 0))
+				if (Creature *light1 = me->SummonCreature(40183, -603.4f, 334.3f, 65.4f, 3.12f, TEMPSUMMON_CORPSE_DESPAWN, 0))
 				light1->CastSpell(me, SPELL_BEAM_LEFT, false);
 				if (Creature *light2 = me->SummonCreature(40183, -678.132f, 334.212f, 64.9f, 0.24f,TEMPSUMMON_CORPSE_DESPAWN, 0))
                 light2->CastSpell(me, SPELL_BEAM_RIGHT, false);
@@ -152,9 +153,10 @@ class boss_temple_guardian_anhuur : public CreatureScript
             void KilledUnit(Unit* /*Killed*/)
             {
                 //Talk(RAND(SAY_KILL_1, SAY_KILL_2));
+				Phase = Bridge2;
             }
 
-            void JustDied(Unit* /*Kill*/)
+            void JustDied(Unit* /*Kill*/ )
             {
                 RemoveSummons();
                 //Talk(SAY_DEATH);
@@ -163,11 +165,16 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
                 GameObject* Bridge = me->FindNearestGameObject(GO_ANHUUR_BRIDGE, 200);
                 if (Bridge)
-                    Bridge->SetGoState(GO_STATE_ACTIVE);
-
-				GameObject* Door = me->FindNearestGameObject(GO_ANHUUR_DOOR, 200);
+                    Bridge->SetGoState(GO_STATE_ACTIVE);				
+				GameObject* Bridge2 = me->FindNearestGameObject(GO_ANHUUR_BRIDGE2, 200);
+                if (m_uiPhaseTimer)
+					//m_uiPhaseTimer = 60000;
+                    Bridge2->SetGoState(GO_STATE_ACTIVE);
+				 //else DivineReckoningTimer -= diff;
+				GameObject* Door = me->FindNearestGameObject(GO_ANHUUR_DOOR, 2000000);
                 if (Door)
                     Door->SetGoState(GO_STATE_ACTIVE);
+
 				me->SummonCreature(48140, -610.0f, 335.0f, 64.3f, 1.51f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
 

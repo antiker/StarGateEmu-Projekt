@@ -3,6 +3,11 @@
 #include "ScriptPCH.h"
 #include "halls_of_origination.h"
 
+#define GAMEOBJECT_ORIGINATION_ELEVATOR 207547
+#define flame_warden 39800
+#define air_warden 39803
+#define water_warden 39802
+
 enum ScriptTexts
 {
     SAY_INTRO = 0,
@@ -104,6 +109,7 @@ class boss_anraphet : public CreatureScript
             void KilledUnit(Unit* /*Killed*/)
             {
                 //DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2), me);
+				
             }
 
             void WardenKilled()
@@ -167,7 +173,7 @@ class boss_anraphet : public CreatureScript
             void JustDied(Unit* /*who*/)
             {
                 //DoScriptText(SAY_DEATH, me);
-
+				me->SummonGameObject(GAMEOBJECT_ORIGINATION_ELEVATOR, -505.319f, 193.743f, 79.01f, 0, 0, 0, 0, 0, 0);
                 if (instance)
                     instance->SetData(DATA_ANRAPHET_EVENT, DONE);
             }
@@ -240,6 +246,7 @@ class boss_flame_warden : public CreatureScript
 
                 if (instance)
                     instance->SetData(DATA_FLAME_WARDEN, DONE);
+				me->SummonCreature(water_warden, -223.096f, 484.889f, 89.137f, 4.67054f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
         };
 
@@ -301,6 +308,7 @@ class boss_air_warden : public CreatureScript
                                 pAI->WardenKilled();
                 if (instance)
                     instance->SetData(DATA_AIR_WARDEN, DONE);
+				me->SummonCreature(flame_warden, -223.183f, 249.185f, 89.1328f, 1.55723f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
         };
 
@@ -368,6 +376,7 @@ class boss_earth_warden : public CreatureScript
                 if (Creature *pAnraphet = me->FindNearestCreature(BOSS_ANRAPHET, 1000, true))
                       if (boss_anraphet::boss_anraphetAI* pAI = CAST_AI(boss_anraphet::boss_anraphetAI, pAnraphet->AI()))
                                 pAI->WardenKilled();
+				me->SummonCreature(air_warden, -329.94f, 484.226f, 89.1343f, 4.74985f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                 if (instance)
                     instance->SetData(DATA_EARTH_WARDEN, DONE);
@@ -433,6 +442,10 @@ class boss_water_warden : public CreatureScript
 
                 if (instance)
                     instance->SetData(DATA_WATER_WARDEN, DONE);
+
+				GameObject* Door = me->FindNearestGameObject(GO_Lights_Boss_Door, 20000);
+                if (Door)
+                    Door->SetGoState(GO_STATE_ACTIVE);
             }
         };
 
