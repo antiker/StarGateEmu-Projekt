@@ -55,7 +55,7 @@ go_bashir_crystalforge
 EndContentData */
 
 #include "ScriptPCH.h"
-
+#define GO_Lights_Hall_Door1 202309
 /*######
 ## go_cat_figurine
 ######*/
@@ -1173,6 +1173,22 @@ public:
     }
 };
 
+class go_lights_hall_door1 : public GameObjectScript
+{
+public:
+    go_lights_hall_door1() : GameObjectScript("go_lights_hall_door1") { }
+
+    bool OnGossipHello(Player* pPlayer, GameObject* me)
+	{
+
+     GameObject* Door = me->FindNearestGameObject(GO_Lights_Hall_Door1, 20000);
+      if (Door)
+          Door->SetGoState(GO_STATE_ACTIVE);
+
+        return true;
+    }
+};
+
 void AddSC_go_scripts()
 {
     new go_cat_figurine;
@@ -1210,4 +1226,5 @@ void AddSC_go_scripts()
     new go_amberpine_outhouse;
     new go_hive_pod;
     new go_massive_seaforium_charge;
+	new go_lights_hall_door1();
 }

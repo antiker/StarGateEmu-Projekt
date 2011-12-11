@@ -3,15 +3,15 @@
 #include "ScriptPCH.h"
 #include "halls_of_origination.h"
 
-enum ScriptTexts
-{
-    SAY_AGGRO = 0,
-    SAY_BEACON = 1,
-    SAY_KILL_1 = 2,
-    SAY_KILL_2 = 3,
-    SAY_DEATH = 4,
-    SAY_ANNOUNCE = 5
-};
+
+#define SAY_AGGRO "Kommt zurück, Eindringlinge ! Diese Hallen dürfen nicht gestört werden ..."
+#define SAY_BEACON ""
+#define SAY_KILL_1 ""
+#define SAY_DEATH "Was habt Ihr getan ..."
+#define SAY_ANNOUNCE ""
+
+#define size_t start
+#define size_t countdown 60000
 
 enum Spells
 {
@@ -83,6 +83,8 @@ class boss_temple_guardian_anhuur : public CreatureScript
 			uint32 m_uiPhaseTimer; 
             uint32 DivineReckoningTimer;
             uint32 SearingFlameTimer;
+			uint32 timer ;
+
 
             void Reset()
             {
@@ -97,6 +99,8 @@ class boss_temple_guardian_anhuur : public CreatureScript
                 RemoveSummons();
                 me->RemoveAurasDueToSpell(SPELL_SHIELD_OF_LIGHT);
                 me->RemoveAurasDueToSpell(SPELL_REVERBERATING_HYMN);
+				timer = 25000;
+
             }
 
             void RemoveSummons()
@@ -134,8 +138,8 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
                 DoCast(me, SPELL_SHIELD_OF_LIGHT);
                 DoCast(me, SPELL_REVERBERATING_HYMN);
-                //Talk(SAY_BEACON);
-                //Talk(SAY_ANNOUNCE);
+                me->MonsterYell(SAY_BEACON, 0, 0);
+                me->MonsterYell(SAY_ANNOUNCE, 0, 0);
                 PhaseCount++;
                 Phase = PHASE_NORMAL;
 
@@ -152,30 +156,33 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
             void KilledUnit(Unit* /*Killed*/)
             {
-                //Talk(RAND(SAY_KILL_1, SAY_KILL_2));
+                me->MonsterYell(SAY_KILL_1, 0, 0);
 				Phase = Bridge2;
             }
 
-            void JustDied(Unit* /*Kill*/ )
+            void JustDied(Unit* /*Kill*/)
             {
                 RemoveSummons();
-                //Talk(SAY_DEATH);
+                me->MonsterYell(SAY_DEATH, 0, 0);
                 if (pInstance)
                     pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, DONE);
 
                 GameObject* Bridge = me->FindNearestGameObject(GO_ANHUUR_BRIDGE, 200);
                 if (Bridge)
-                    Bridge->SetGoState(GO_STATE_ACTIVE);				
-				GameObject* Bridge2 = me->FindNearestGameObject(GO_ANHUUR_BRIDGE2, 200);
-                if (m_uiPhaseTimer)
-					//m_uiPhaseTimer = 60000;
-                    Bridge2->SetGoState(GO_STATE_ACTIVE);
-				 //else DivineReckoningTimer -= diff;
+                    Bridge->SetGoState(GO_STATE_ACTIVE);
+
+				GameObject* Bridge2 = me->FindNearestGameObject(GO_ANHUUR_BRIDGE2, 200);				
+				if (Bridge2)
+					Bridge2 ->SetGoState(GO_STATE_ACTIVE);
+					
+
+
+				
 				GameObject* Door = me->FindNearestGameObject(GO_ANHUUR_DOOR, 2000000);
                 if (Door)
                     Door->SetGoState(GO_STATE_ACTIVE);
 
-				me->SummonCreature(48140, -610.0f, 335.0f, 64.3f, 1.51f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+				//me->SummonCreature(48140, -610.0f, 335.0f, 64.3f, 1.51f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
 
             void SummonedCreatureDespawn(Creature* summon)
@@ -192,12 +199,13 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
             void EnterCombat(Unit* /*Ent*/)
             {
-                //Talk(SAY_AGGRO);
+                me->MonsterYell(SAY_AGGRO, 0, 0);
 
                 if (pInstance)
                     pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, IN_PROGRESS);
 
                 DoZoneInCombat();
+
             }
 
             void UpdateAI(const uint32 diff)

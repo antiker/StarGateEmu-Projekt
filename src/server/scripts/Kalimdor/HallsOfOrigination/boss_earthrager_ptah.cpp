@@ -6,9 +6,9 @@
 #include "SpellAuraEffects.h"
 #include "halls_of_origination.h"
 
-#define SAY_AGGRO "More carrion for the swarm..."
-#define SAY_DIED "Ptah... is... no more..."
-#define SAY_SPELL "Dust to dust."
+#define SAY_AGGRO "Mehr Aas für den Schwarm..."
+#define SAY_DIED "Ptah... ist... nicht mehr..."
+#define SAY_SPELL "Staub zu Staub."
 
 
 enum Spells

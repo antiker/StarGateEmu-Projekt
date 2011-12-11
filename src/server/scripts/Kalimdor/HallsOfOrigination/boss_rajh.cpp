@@ -18,13 +18,12 @@ enum Spells
     SPELL_SOLAR_FIRE = 89131
 };
 
-enum Texts
-{
-    SAY_AGGRO = 0,
-    SAY_KILL = 1,
-    SAY_DEATH = 2,
-    SAY_ENERGIZE = 3
-};
+
+#define SAY_AGGRO "Spührt ihr diesen Wind? Diese wärme der Sonne ..."
+#define SAY_KILL ""
+#define SAY_DEATH "Funkelndes Licht begleite mich auf meinen lezten weg ..."
+#define SAY_ENERGIZE ""
+
 
 enum EnergizeCords
 {
@@ -67,7 +66,7 @@ class boss_rajh : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                //DoScriptText(SAY_AGGRO, me);
+                me->MonsterYell(SAY_AGGRO, 0, 0);
 
                 if (instance)
                     instance->SetData(DATA_RAJH_EVENT, IN_PROGRESS);
@@ -85,7 +84,7 @@ class boss_rajh : public CreatureScript
 
             void EnergizeSun()
             {
-                //DoScriptText(SAY_ENERGIZE, me);
+                me->MonsterYell(SAY_ENERGIZE, 0, 0);
                 me->GetMotionMaster()->MovePoint(0, X, Y, Z);
                 DoCastAOE(SPELL_BLESSING_OF_THE_SUN);
             }
@@ -134,7 +133,7 @@ class boss_rajh : public CreatureScript
 
             void JustDied(Unit* /*who*/)
             {
-                //DoScriptText(SAY_DEATH, me);
+                me->MonsterYell(SAY_DEATH, 0, 0);
 
                 if (instance)
                     instance->SetData(DATA_RAJH_EVENT, DONE);

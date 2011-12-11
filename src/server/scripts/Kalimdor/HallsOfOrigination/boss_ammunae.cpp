@@ -3,6 +3,12 @@
 #include "ScriptPCH.h"
 #include "halls_of_origination.h"
 
+
+#define SAY_AGGRO "Eure Lebenskraft wird meinem Garten neu zum blühen bringen ..."
+#define SAY_GROWTH ""
+#define SAY_KILL ""
+#define SAY_DEATH "Der Zyklus wird fortgesetzt ...!"
+
 enum Spells
 {
     //Ammunae
@@ -31,13 +37,7 @@ enum NPCs
     NPC_SPORE = 40585
 };
 
-enum ScriptTexts
-{
-    SAY_AGGRO = 0,
-    SAY_GROWTH = 1,
-    SAY_KILL = 2,
-    SAY_DEATH = 3,
-};
+
 
 enum Gameobjects
 {
@@ -84,6 +84,7 @@ class boss_ammunae : public CreatureScript
             void EnterCombat(Unit* /*who*/)
             {
                 //DoScriptText(SAY_AGGRO, me);
+				me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
 
                 if (instance)
                     instance->SetData(DATA_AMMUNAE_EVENT, IN_PROGRESS);
@@ -118,6 +119,7 @@ class boss_ammunae : public CreatureScript
             void DoRampartGrowth()
             {
                 //DoScriptText(SAY_GROWTH, me);
+				me->MonsterYell(SAY_GROWTH, LANG_UNIVERSAL, NULL);
                 me->SetPower(POWER_ENERGY, 0);
                 DoCastAOE(SPELL_RAMPANT_GROWTH);
                 RampartSummon(NPC_SEEDING_POD, 100);
@@ -168,7 +170,7 @@ class boss_ammunae : public CreatureScript
             void JustDied(Unit* /*who*/)
             {
                 //DoScriptText(SAY_DEATH, me);
-
+				me->MonsterYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
                 if (instance)
                     instance->SetData(DATA_AMMUNAE_EVENT, DONE);
             }

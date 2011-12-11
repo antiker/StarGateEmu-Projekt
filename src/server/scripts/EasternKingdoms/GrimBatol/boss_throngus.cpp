@@ -4,14 +4,14 @@
 
 #define SAY_AGGRO "Ihr kommt nicht durch die Abwehr!"
 #define SAY_AGGRO1 "Ihr seid noch nicht durch die Abwehr!"
-#define SAY_AGGRO2 "Throngus benutzt deine Leiche irgentwann auf einen anderen K�rper..."
+#define SAY_AGGRO2 "Throngus benutzt deine Leiche irgentwann auf einen anderen Körper..."
 #define SAY_AGGRO3 "Oh, dieser werde Schmerz!"
 #define SAY_DIED "Tod... Gute Wahl, nicht die beste wahl aber vieleicht besser als ein fehlschlag im leben!"
 
 enum Spells
 {
 SPELL_BOUCLIER = 90830, // Bouclier incendiaire
-SPELL_FLECHE = 45101, // Fl�che enflamm�e
+SPELL_FLECHE = 45101, // Fläche enflamm�e
 SPELL_PHALANGE = 74908, // Phalange individuelle
 SPELL_ARDENTE = 90764, // Flammes ardentes
 SPELL_ROSSER = 47480, // Rosser

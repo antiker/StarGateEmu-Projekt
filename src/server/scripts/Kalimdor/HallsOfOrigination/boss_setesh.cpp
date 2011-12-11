@@ -20,12 +20,10 @@ enum Spells
     SPELL_ANTIMAGIC_PRISON = 76903
 };
 
-enum Texts
-{
-    SAY_AGGRO = 0,
-    SAY_KILL = 1,
-    SAY_DEATH = 2
-};
+
+#define SAY_AGGRO "Das was ihr nicht kontrollieren könnt macht euch Angst! Aber werdet ihr eure Angst kontrollieren können ?"
+#define SAY_KILL ""
+#define SAY_DEATH "JA! Entladet ... euren....ZORN ..."
 
 enum Gameobjects
 {
@@ -70,7 +68,7 @@ class boss_setesh : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                //DoScriptText(SAY_AGGRO, me);
+                me->MonsterYell(SAY_AGGRO, 0, 0);
 
                 if (instance)
                     instance->SetData(DATA_SETESH_EVENT, IN_PROGRESS);
@@ -128,7 +126,7 @@ class boss_setesh : public CreatureScript
 
             void JustDied(Unit* /*who*/)
             {
-                //DoScriptText(SAY_DEATH, me);
+                me->MonsterYell(SAY_DEATH, 0, 0);
 
                 if (instance)
                     instance->SetData(DATA_SETESH_EVENT, DONE);

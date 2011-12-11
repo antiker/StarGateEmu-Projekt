@@ -8,21 +8,19 @@
 #define air_warden 39803
 #define water_warden 39802
 
-enum ScriptTexts
-{
-    SAY_INTRO = 0,
-    SAY_AGGRO = 1,
-    SAY_KILL_1 = 2,
-    SAY_KILL_2 = 3,
-    SAY_OMEGA = 4,
-    SAY_DEATH = 5,
-    SAY_PROTOCOL = 6
-};
+
+#define SAY_INTRO ""
+#define SAY_AGGRO "Diese Einheit wurde Aktiviert, währen des Operative Protocols. Runterladen von neuen Funktionsparametern. Download abgeschlossen ...! Auto-verteidiguns-System jezt 100 % Activ, installation der Fremddateien des Systems ..."
+#define SAY_KILL_1 ""
+#define SAY_KILL_2 ""
+#define SAY_OMEGA "Omega Aktiviert!"
+#define SAY_DEATH "Vernichtung der Einheit Anraphet"
+#define SAY_PROTOCOL ""
 
 enum Spells
 {
     //Anraphet
-SPELL_ALPHA_BEAMS = 76184,
+	SPELL_ALPHA_BEAMS = 76184,
     SPELL_CRUMBLING_RUIN = 75609,
     SPELL_DESTRUCTION_PROTOCOL = 77437,
     SPELL_NEMESIS_STRIKE = 75604,
@@ -37,7 +35,7 @@ SPELL_ALPHA_BEAMS = 76184,
     SPELL_IMPALE = 77235,
     SPELL_ROCKWAVE = 77234,
     //Water Warden
-    SPELL_BUBBLE_BOUND = 77336
+    SPELL_BUBBLE_BOUND, //= 77336
 };
 
 enum Cords
@@ -92,7 +90,7 @@ class boss_anraphet : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                //DoScriptText(SAY_AGGRO, me);
+                me->MonsterYell(SAY_AGGRO, 0, 0);
 
                 if (instance)
                     instance->SetData(DATA_ANRAPHET_EVENT, IN_PROGRESS);
@@ -108,7 +106,7 @@ class boss_anraphet : public CreatureScript
 
             void KilledUnit(Unit* /*Killed*/)
             {
-                //DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2), me);
+                me->MonsterYell(SAY_KILL_1, 0, 0);
 				
             }
 
@@ -124,8 +122,8 @@ class boss_anraphet : public CreatureScript
             {
                 //Enter the room and kill all troggs
 
-                //DoScriptText(SAY_INTRO, me);
-                //DoScriptText(SAY_PROTOCOL me);
+                me->MonsterYell(SAY_INTRO, 0, 0);
+                me->MonsterYell(SAY_PROTOCOL, 0, 0);
                 me->GetMotionMaster()->MovePoint(0, X, Y, Z);
                 DoCast(SPELL_DESTRUCTION_PROTOCOL);
             }
@@ -158,7 +156,7 @@ class boss_anraphet : public CreatureScript
                             events.ScheduleEvent(EVENT_NEMESIS_STRIKE, 2000);
                             break;
                         case EVENT_OMEGA_STANCE:
-                            //DoScriptText(SAY_OMEGA, me);
+                            me->MonsterYell(SAY_OMEGA, 0, 0);
                             DoCast(me, SPELL_OMEGA_STANCE);
                             events.ScheduleEvent(EVENT_OMEGA_STANCE, 14000);
                             break;
@@ -436,9 +434,9 @@ class boss_water_warden : public CreatureScript
 
             void JustDied(Unit* /*who*/)
             {
-                if (Creature *pAnraphet = me->FindNearestCreature(BOSS_ANRAPHET, 1000, true))
-                      if (boss_anraphet::boss_anraphetAI* pAI = CAST_AI(boss_anraphet::boss_anraphetAI, pAnraphet->AI()))
-                                pAI->WardenKilled();
+                //if (Creature *pAnraphet = me->FindNearestCreature(BOSS_ANRAPHET, 1000, true))
+                      //if (boss_anraphet::boss_anraphetAI* pAI = CAST_AI(boss_anraphet::boss_anraphetAI, pAnraphet->AI()))
+                                //pAI->WardenKilled();
 
                 if (instance)
                     instance->SetData(DATA_WATER_WARDEN, DONE);

@@ -16,15 +16,12 @@ class OrientationCheck : public std::unary_function<Unit*, bool>
         Unit* caster;
 };
 
-enum Texts
-{
-    SAY_AGGRO = 0,
-    SAY_SUPERNOVA = 1,
-    SAY_KILL_1 = 2,
-    SAY_KILL_2 = 3,
-    SAY_DEATH_1 = 4,
-    SAY_DEATH_2 = 5,
-};
+#define SAY_AGGRO "Jahrhunderte der Dunkelheit ... wegen dir !"
+#define SAY_SUPERNOVA ""
+#define SAY_KILL_1 "Mein Glanz trübt ..."
+#define SAY_DEATH_1 "Ihr werdet schon sehen !"
+
+
 
 enum Spells
 {
@@ -75,17 +72,17 @@ class boss_isiset : public CreatureScript
 
             void EnterCombat(Unit *who)
             {
-                //Talk(SAY_AGGRO, 0, 0);
+                me->MonsterYell(SAY_AGGRO, 0, 0);
             }
 
             void KilledUnit(Unit* victim)
             {
-                //Talk(RAND(SAY_KILL_1, SAY_KILL_2));
+                me->MonsterYell(SAY_KILL_1, 0, 0);
             }
 
             void JustDied(Unit* Killer)
             {
-                //Talk(RAND(SAY_DEATH_1, SAY_DEATH_2));
+                me->MonsterYell(SAY_DEATH_1, 0, 0);
             }
 
             void Reset()
@@ -219,7 +216,7 @@ class boss_isiset : public CreatureScript
 
                 if (SupernovaTimer <= diff && Phased == false)
                 {
-                    //Talk(SAY_SUPERNOVA);
+                    me->MonsterYell(SAY_SUPERNOVA, 0, 0);
                     DoCast(me->getVictim(), SPELL_SUPERNOVA);
                     SupernovaTimer = 15000+rand()%5000;
                 } else SupernovaTimer -= diff;
