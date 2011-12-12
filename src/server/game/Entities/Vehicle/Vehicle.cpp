@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2010-2011 Project StarGate
- */
-
 #include "gamePCH.h"
 #include "Common.h"
 #include "Log.h"
@@ -37,13 +33,20 @@ Vehicle::Vehicle(Unit *unit, VehicleEntry const *vehInfo) : me(unit), m_vehicleI
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK_DEST, true);
         case 158:
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEAL, true);
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEAL_PCT, true);
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_DISPEL, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_FEAR, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_PERIODIC_HEAL, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_STUN, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_ROOT, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_CONFUSE, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
+            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SHIELD, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 13810, true); // Frost Trap
+            me->ApplySpellImmune(0, IMMUNITY_ID, 55741, true); // Desecration Rank 1
+            me->ApplySpellImmune(0, IMMUNITY_ID, 68766, true); // Desecration Rank 2
             break;
         default:
             break;
@@ -116,9 +119,9 @@ void Vehicle::InstallAllAccessories(uint32 entry)
 
 void Vehicle::Uninstall()
 {
-    //sLog->outDebug("Vehicle::Uninstall %u", me->GetEntry());
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::Uninstall %u", me->GetEntry());
     for (SeatMap::iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (Unit *passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
+        if (Unit *passenger = itr->second.passenger)
             if (passenger->HasUnitTypeMask(UNIT_MASK_ACCESSORY))
                 passenger->ToTempSummon()->UnSummon();
 
@@ -130,9 +133,9 @@ void Vehicle::Uninstall()
 
 void Vehicle::Die()
 {
-    //sLog->outDebug("Vehicle::Die %u", me->GetEntry());
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::Die %u", me->GetEntry());
     for (SeatMap::iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (Unit *passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
+        if (Unit *passenger = itr->second.passenger)
             if (passenger->HasUnitTypeMask(UNIT_MASK_ACCESSORY))
                 passenger->setDeathState(JUST_DIED);
 
@@ -144,7 +147,7 @@ void Vehicle::Die()
 
 void Vehicle::Reset()
 {
-    //sLog->outDebug("Vehicle::Reset");
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::Reset");
     if (me->GetTypeId() == TYPEID_PLAYER)
     {
         if (m_usableSeatNum)
@@ -163,25 +166,19 @@ void Vehicle::Reset()
 
 void Vehicle::RemoveAllPassengers()
 {
-    //sLog->outDebug("Vehicle::RemoveAllPassengers");
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::RemoveAllPassengers");
     for (SeatMap::iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (Unit *passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
+        if (Unit *passenger = itr->second.passenger)
         {
-            ASSERT(passenger->IsInWorld());
-            ASSERT(passenger->IsOnVehicle(GetBase()));
-            ASSERT(GetSeatForPassenger(passenger));
-
             if (passenger->IsVehicle())
                 passenger->GetVehicleKit()->RemoveAllPassengers();
-
             if (passenger->GetVehicle() != this)
-                sLog->outCrash("Vehicle %u has invalid passenger %u. Seat: %i", me->GetEntry(), passenger->GetEntry(), itr->first);
-
+                sLog->outCrash("Vehicle %u has invalid passenger %u.", me->GetEntry(), passenger->GetEntry());
             passenger->ExitVehicle();
             if (itr->second.passenger)
             {
-                sLog->outCrash("Vehicle %u cannot remove passenger %u. "UI64FMTD" is still on vehicle.", me->GetEntry(), passenger->GetEntry(), itr->second.passenger);
-                itr->second.passenger = 0;
+                sLog->outCrash("Vehicle %u cannot remove passenger %u. %u is still on vehicle.", me->GetEntry(), passenger->GetEntry(), itr->second.passenger->GetEntry());
+                itr->second.passenger = NULL;
             }
 
             // creature passengers mounted on player mounts should be despawned at dismount
@@ -203,8 +200,7 @@ Unit *Vehicle::GetPassenger(int8 seatId) const
     SeatMap::const_iterator seat = m_Seats.find(seatId);
     if (seat == m_Seats.end())
         return NULL;
-
-    return ObjectAccessor::GetUnit(*GetBase(), seat->second.passenger);
+    return seat->second.passenger;
 }
 
 int8 Vehicle::GetNextEmptySeat(int8 seatId, bool next, bool byAura) const
@@ -215,7 +211,6 @@ int8 Vehicle::GetNextEmptySeat(int8 seatId, bool next, bool byAura) const
 
     while (seat->second.passenger || (!byAura && !seat->second.seatInfo->CanEnterOrExit()) || (byAura && !seat->second.seatInfo->IsUsableByAura()))
     {
-		//sLog->outDebug("Vehicle::GetNextEmptySeat: m_flags: %u, m_flagsB:%u", seat->second.seatInfo->m_flags, seat->second.seatInfo->m_flagsB);
         if (next)
         {
             ++seat;
@@ -269,11 +264,14 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId, bool byAura)
     if (unit->GetVehicle() != this)
         return false;
 
+   if (unit->GetTypeId() == TYPEID_PLAYER && unit->GetMap()->IsBattleArena())
+         return false;
+
     SeatMap::iterator seat;
     if (seatId < 0) // no specific seat requirement
     {
         for (seat = m_Seats.begin(); seat != m_Seats.end(); ++seat)
-            if (!seat->second.passenger && (!byAura && seat->second.seatInfo->CanEnterOrExit()) || (byAura && seat->second.seatInfo->IsUsableByAura()))
+            if (!seat->second.passenger && ((!byAura && seat->second.seatInfo->CanEnterOrExit()) || (byAura && seat->second.seatInfo->IsUsableByAura())))
                 break;
 
         if (seat == m_Seats.end()) // no available seat
@@ -286,17 +284,16 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId, bool byAura)
             return false;
 
         if (seat->second.passenger)
-            if (Unit* passenger = ObjectAccessor::GetUnit(*GetBase(), seat->second.passenger))
-                passenger->ExitVehicle();
+            seat->second.passenger->ExitVehicle();
             else
-                seat->second.passenger = 0;
+                seat->second.passenger = NULL;
 
         ASSERT(!seat->second.passenger);
     }
 
-    //sLog->outDebug("Unit %s enter vehicle entry %u id %u dbguid %u seat %d", unit->GetName(), me->GetEntry(), m_vehicleInfo->m_ID, me->GetGUIDLow(), (int32)seat->first);
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Unit %s enter vehicle entry %u id %u dbguid %u seat %d", unit->GetName(), me->GetEntry(), m_vehicleInfo->m_ID, me->GetGUIDLow(), (int32)seat->first);
 
-    seat->second.passenger = unit->GetGUID();
+    seat->second.passenger = unit;
     if (seat->second.seatInfo->CanEnterOrExit())
     {
         ASSERT(m_usableSeatNum);
@@ -370,12 +367,16 @@ void Vehicle::RemovePassenger(Unit *unit)
     if (unit->GetVehicle() != this)
         return;
 
-    SeatMap::iterator seat = GetSeatIteratorForPassenger(unit);
+    SeatMap::iterator seat;
+    for (seat = m_Seats.begin(); seat != m_Seats.end(); ++seat)
+        if (seat->second.passenger == unit)
+            break;
+
     ASSERT(seat != m_Seats.end());
 
-    //sLog->outDebug("Unit %s exit vehicle entry %u id %u dbguid %u seat %d", unit->GetName(), me->GetEntry(), m_vehicleInfo->m_ID, me->GetGUIDLow(), (int32)seat->first);
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Unit %s exit vehicle entry %u id %u dbguid %u seat %d", unit->GetName(), me->GetEntry(), m_vehicleInfo->m_ID, me->GetGUIDLow(), (int32)seat->first);
 
-    seat->second.passenger = 0;
+    seat->second.passenger = NULL;
     if (seat->second.seatInfo->CanEnterOrExit())
     {
         if (!m_usableSeatNum)
@@ -422,12 +423,8 @@ void Vehicle::RelocatePassengers(float x, float y, float z, float ang)
 
     // not sure that absolute position calculation is correct, it must depend on vehicle orientation and pitch angle
     for (SeatMap::const_iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (Unit *passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
+        if (Unit *passenger = itr->second.passenger)
         {
-            ASSERT(passenger->IsInWorld());
-            ASSERT(passenger->IsOnVehicle(GetBase()));
-            ASSERT(GetSeatForPassenger(passenger));
-
             float px = x + passenger->m_movementInfo.t_pos.m_positionX;
             float py = y + passenger->m_movementInfo.t_pos.m_positionY;
             float pz = z + passenger->m_movementInfo.t_pos.m_positionZ;
@@ -439,7 +436,7 @@ void Vehicle::RelocatePassengers(float x, float y, float z, float ang)
 
 void Vehicle::Dismiss()
 {
-    //sLog->outDebug("Vehicle::Dismiss %u", me->GetEntry());
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::Dismiss %u", me->GetEntry());
     Uninstall();
     me->SendObjectDeSpawnAnim(me->GetGUID());
     me->CombatStop();
@@ -462,7 +459,7 @@ uint16 Vehicle::GetExtraMovementFlagsForBase() const
     if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDPITCHING)
         movementMask |= MOVEMENTFLAG2_FULL_SPEED_PITCHING;
 
-    //sLog->outDebug("Vehicle::GetExtraMovementFlagsForBase() returned %u", movementMask);
+    sLog->outDebug(LOG_FILTER_VEHICLES, "Vehicle::GetExtraMovementFlagsForBase() returned %u", movementMask);
     return movementMask;
 }
 
@@ -470,18 +467,8 @@ VehicleSeatEntry const* Vehicle::GetSeatForPassenger(Unit* passenger)
 {
     SeatMap::iterator itr;
     for (itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (itr->second.passenger = passenger->GetGUID())
+        if (itr->second.passenger = passenger)
             return itr->second.seatInfo;
 
     return NULL;
-}
-
-SeatMap::iterator Vehicle::GetSeatIteratorForPassenger(Unit* passenger)
-{
-    SeatMap::iterator itr;
-    for (itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (itr->second.passenger == passenger->GetGUID())
-            return itr;
-
-    return m_Seats.end();
 }

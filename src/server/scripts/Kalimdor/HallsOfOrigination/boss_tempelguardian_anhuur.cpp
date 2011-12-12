@@ -66,16 +66,16 @@ class boss_temple_guardian_anhuur : public CreatureScript
             return new boss_temple_guardian_anhuurAI(creature);
         }
 
-        struct boss_temple_guardian_anhuurAI : public ScriptedAI
+        struct boss_temple_guardian_anhuurAI : public BossAI
         {
-            boss_temple_guardian_anhuurAI(Creature* creature) : ScriptedAI(creature)
+            boss_temple_guardian_anhuurAI(Creature* creature) : BossAI(creature, DATA_TEMPLE_GUARDIAN_ANHUUR)
             {
-                pInstance = creature->GetInstanceScript();
+                //pInstance = creature->GetInstanceScript();
             }
 
             std::list<uint64> SummonList;
 
-            InstanceScript *pInstance;
+            //InstanceScript *pInstance;
 
             uint8 Phase;
             uint8 PhaseCount;
@@ -88,8 +88,8 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
             void Reset()
             {
-                if (pInstance)
-                    pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, NOT_STARTED);
+                if (instance)
+                    instance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, NOT_STARTED);
 				m_uiPhaseTimer = 60000;
                 Phase = PHASE_NORMAL;
                 PhaseCount = 0;
@@ -162,10 +162,11 @@ class boss_temple_guardian_anhuur : public CreatureScript
 
             void JustDied(Unit* /*Kill*/)
             {
+				_JustDied();
                 RemoveSummons();
                 me->MonsterYell(SAY_DEATH, 0, 0);
-                if (pInstance)
-                    pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, DONE);
+                if (instance)
+                    instance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, DONE);
 
                 GameObject* Bridge = me->FindNearestGameObject(GO_ANHUUR_BRIDGE, 200);
                 if (Bridge)
@@ -201,8 +202,8 @@ class boss_temple_guardian_anhuur : public CreatureScript
             {
                 me->MonsterYell(SAY_AGGRO, 0, 0);
 
-                if (pInstance)
-                    pInstance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, IN_PROGRESS);
+                if (instance)
+                    instance->SetData(DATA_TEMPLE_GUARDIAN_ANHUUR_EVENT, IN_PROGRESS);
 
                 DoZoneInCombat();
 
